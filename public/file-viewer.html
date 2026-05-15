@@ -1306,8 +1306,10 @@
                         tx.objectStore('images').put({ key: cacheKey, data: ab, timestamp: Date.now() });
                     } catch (e) { console.error('IDB save failed', e); }
                 }
-                img.src = blobUrl;
-                img.onload = () => { placeholder.style.display = 'none'; img.style.display = 'block'; };
+                const imgEl = document.getElementById('webpViewer');
+                const phEl = document.getElementById('placeholder');
+                imgEl.src = blobUrl;
+                imgEl.onload = () => { phEl.style.display = 'none'; imgEl.style.display = 'block'; };
                 preloadNext(index);
             } catch (err) {
                 console.error('Load failed', err);
