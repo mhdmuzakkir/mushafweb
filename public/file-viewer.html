@@ -783,11 +783,9 @@
             font-family: 'Surah', 'DIN Next Arabic', serif;
             font-size: 1rem;
         }
-        .surah-select option {
+        #gotoSurahMenu .custom-dropdown-item {
             font-family: 'Surah', 'DIN Next Arabic', serif;
             font-size: 1rem;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
         }
         .ayah-select {
             font-size: 0.95rem;
@@ -1446,9 +1444,9 @@
             if (currentScale > 1.2) return;
             if (dt > 400 || Math.abs(dx) < 50 || Math.abs(dy) > 100) return;
             if (dx < 0) {
-                if (currentFileIndex < filteredFiles.length - 1) nextFile();
-            } else {
                 if (currentFileIndex > 0) prevFile();
+            } else {
+                if (currentFileIndex < filteredFiles.length - 1) nextFile();
             }
         }
 
