@@ -431,13 +431,13 @@
 
         .riwayah-sheet {
             position: fixed;
-            top: 50%;
+            top: 52%;
             left: 50%;
             z-index: 250;
             background: var(--bg-secondary);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border);
-            padding: 20px;
+            padding: 0;
             transform: translate(-50%, -50%) scale(0.92);
             opacity: 0;
             visibility: hidden;
@@ -445,14 +445,53 @@
             width: 90vw;
             max-width: 400px;
             max-height: 70vh;
-            overflow-y: auto;
+            overflow: hidden;
             box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
         }
         .riwayah-sheet.open {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
             visibility: visible;
         }
+        .riwayah-sheet .sheet-header {
+            background: var(--accent);
+            color: #ffffff;
+            padding: 16px 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .riwayah-sheet .sheet-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .riwayah-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+            overflow-y: auto;
+        }
+        .riwayah-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            user-select: none;
+        }
+        .riwayah-list-item:hover { background: var(--bg-elevated); border-color: var(--accent); color: var(--text-primary); }
+        .riwayah-list-item:active { transform: scale(0.98); }
+        .riwayah-list-item.active { background: var(--accent); color: white; border-color: var(--accent); }
 
         .page-list, .surah-list, .ayah-list, .riwayah-list {
             display: flex;
@@ -1247,7 +1286,6 @@
     <div class="riwayah-sheet" id="riwayahSheet">
         <div class="sheet-header">
             <div class="sheet-title">Select Riwayah</div>
-            <button class="sheet-close" onclick="closeRiwayahPopup()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
         </div>
         <div class="riwayah-list" id="riwayahList"></div>
     </div>
