@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#140008">
+    <meta name="theme-color" content="#f5f0e6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>مُصْحَف — Mushaf Viewer</title>
     <style>
         :root {
-            --bg-deep: #0d0005;
-            --bg-primary: #140008;
-            --bg-secondary: #1f000c;
-            --bg-tertiary: #2d0012;
-            --bg-elevated: #3d0019;
+            --bg-deep: #e8e0d0;
+            --bg-primary: #f5f0e6;
+            --bg-secondary: #ede6d6;
+            --bg-tertiary: #e5dcc8;
+            --bg-elevated: #ddd2bc;
             --accent: #8b0046;
             --accent-hover: #a6004a;
-            --accent-muted: rgba(139, 0, 70, 0.15);
-            --accent-glow: rgba(139, 0, 70, 0.3);
-            --text-primary: #f0f4f8;
-            --text-secondary: #b8a0a8;
-            --text-tertiary: #8a6a74;
-            --border: rgba(184, 160, 168, 0.1);
-            --border-hover: rgba(184, 160, 168, 0.2);
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --success: #10b981;
-            --danger: #ef4444;
+            --accent-muted: rgba(139, 0, 70, 0.12);
+            --accent-glow: rgba(139, 0, 70, 0.25);
+            --text-primary: #3d3028;
+            --text-secondary: #7a6a5a;
+            --text-tertiary: #a09080;
+            --border: rgba(120, 100, 80, 0.15);
+            --border-hover: rgba(120, 100, 80, 0.25);
+            --warning: #d97706;
+            --info: #2563eb;
+            --success: #059669;
+            --danger: #dc2626;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -89,7 +89,7 @@
             flex: 1;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(180deg, var(--bg-deep) 0%, #121a16 100%);
+            background: linear-gradient(180deg, var(--bg-deep) 0%, #dcd4c4 100%);
             touch-action: none;
         }
 
@@ -109,7 +109,7 @@
             object-fit: contain;
             display: none;
             border-radius: 4px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 40px rgba(60,50,40,0.15);
             background: #f3f0e6;
         }
 
@@ -150,13 +150,14 @@
             width: 80px;
             height: 80px;
             border-radius: var(--radius-xl);
-            background: var(--bg-tertiary);
+            background: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
             box-shadow: var(--shadow-md);
         }
+        .placeholder-icon img { width: 48px; height: 48px; filter: brightness(0) invert(1); }
 
         .placeholder-text {
             font-size: 1rem;
@@ -193,9 +194,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: linear-gradient(180deg, rgba(15,20,25,0.95) 0%, rgba(15,20,25,0.6) 60%, transparent 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--accent);
             transition: opacity var(--transition-normal), transform var(--transition-normal);
         }
 
@@ -209,9 +208,9 @@
             width: 40px;
             height: 40px;
             border-radius: var(--radius-md);
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
+            background: transparent;
+            border: 1px solid transparent;
+            color: #ffffff;
             font-size: 1.1rem;
             display: flex;
             align-items: center;
@@ -221,7 +220,7 @@
             flex-shrink: 0;
         }
 
-        .top-btn:active { transform: scale(0.92); background: var(--bg-elevated); }
+        .top-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.2); }
 
         .top-info {
             flex: 1;
@@ -234,12 +233,12 @@
         .top-title {
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--text-primary);
+            color: #ffffff;
         }
 
         .top-subtitle {
             font-size: 0.75rem;
-            color: var(--text-tertiary);
+            color: rgba(255,255,255,0.7);
         }
 
         .top-badge {
@@ -271,7 +270,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.85);
+            background: rgba(60,50,40,0.85);
             color: white;
             padding: 12px 24px;
             border-radius: 24px;
@@ -300,13 +299,11 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(45, 0, 18, 0.92);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(184, 160, 168, 0.12);
+            background: var(--accent);
+            border: 1px solid var(--accent);
             border-radius: 9999px;
             padding: 6px 10px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 30px rgba(139, 0, 70, 0.4);
             pointer-events: auto;
             max-width: 420px;
             width: 100%;
@@ -318,7 +315,7 @@
             border-radius: 50%;
             background: transparent;
             border: none;
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.8);
             font-size: 1.1rem;
             display: flex;
             align-items: center;
@@ -328,10 +325,10 @@
             flex-shrink: 0;
         }
 
-        .nav-btn:active { transform: scale(0.92); color: var(--text-primary); }
-        .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-        .nav-btn.primary { background: var(--accent); color: white; }
-        .nav-btn.primary:active { background: var(--accent-hover); }
+        .nav-btn:active { transform: scale(0.92); color: #ffffff; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .nav-btn.primary { background: rgba(255,255,255,0.2); color: white; }
+        .nav-btn.primary:active { background: rgba(255,255,255,0.35); }
 
         .nav-center {
             flex: 1;
@@ -345,7 +342,7 @@
             width: 56px;
             text-align: center;
             padding: 8px 4px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(120,100,80,0.08);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             color: var(--text-primary);
@@ -365,10 +362,10 @@
             justify-content: center;
             height: 40px;
             padding: 0 12px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
+            background: #5c002e;
+            border: 1px solid var(--accent);
             border-radius: var(--radius-md) 0 0 var(--radius-md);
-            color: var(--text-primary);
+            color: #ffffff;
             font-size: 0.95rem;
             font-weight: 700;
             font-family: inherit;
@@ -376,7 +373,7 @@
             transition: all var(--transition-fast);
             border-right: none;
         }
-        .nav-page-trigger:hover { border-color: var(--accent); }
+        .nav-page-trigger:hover { background: #6b0036; border-color: #6b0036; }
         .nav-page-trigger:active { transform: scale(0.95); }
 
         .nav-surah-trigger {
@@ -386,10 +383,10 @@
             justify-content: center;
             height: 40px;
             padding: 0 12px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
+            background: #5c002e;
+            border: 1px solid var(--accent);
             border-radius: 0 var(--radius-md) var(--radius-md) 0;
-            color: var(--text-primary);
+            color: #ffffff;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
@@ -398,7 +395,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .nav-surah-trigger:hover { border-color: var(--accent); }
+        .nav-surah-trigger:hover { background: #6b0036; border-color: #6b0036; }
         .nav-surah-trigger:active { transform: scale(0.95); }
 
         .page-sheet, .surah-sheet, .ayah-sheet {
@@ -447,7 +444,7 @@
             position: fixed;
             inset: 0;
             z-index: 200;
-            background: rgba(0,0,0,0.6);
+            background: rgba(60,50,40,0.4);
             opacity: 0;
             visibility: hidden;
             transition: all var(--transition-normal);
@@ -584,14 +581,14 @@
 
         .drawer-header {
             padding: 20px;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-primary);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            background: var(--accent);
         }
 
         .drawer-title {
             font-size: 1.1rem;
             font-weight: 700;
-            color: var(--accent);
+            color: #ffffff;
             margin-bottom: 4px;
             font-family: 'DIN Next Arabic', sans-serif;
         }
@@ -600,7 +597,7 @@
             font-family: 'Surah', 'DIN Next Arabic', serif;
         }
 
-        .drawer-subtitle { font-size: 0.8rem; color: var(--text-tertiary); }
+        .drawer-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.75); }
 
         .drawer-body { flex: 1; overflow-y: auto; padding: 12px; }
 
@@ -795,7 +792,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(60,50,40,0.5);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
@@ -1017,7 +1014,7 @@
                     <div class="drawer-title">Mushaf Viewer</div>
                     <div class="drawer-subtitle">Select riwayah to browse</div>
                 </div>
-                <button onclick="toggleDrawer()" style="width:36px;height:36px;border-radius:50%;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><img src="icons/close-exit.svg" style="width:16px;height:16px;filter:invert(1);" alt="Close"></button>
+                <button onclick="toggleDrawer()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#ffffff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><img src="icons/close-exit.svg" style="width:16px;height:16px;filter:invert(1);" alt="Close"></button>
             </div>
             <div class="drawer-body">
                 <div class="input-group" style="margin-bottom:12px;">
@@ -1050,7 +1047,7 @@
 
             <div id="imageWrapper">
                 <div class="placeholder" id="placeholder">
-                    <div class="placeholder-icon surah-font" style="font-size:2rem;color:var(--accent);">&#1575;&#1604;&#1602;&#1585;&#1570;&#1606;</div>
+                    <div class="placeholder-icon"><img src="icons/quran.svg" alt="Quran"></div>
                     <div class="placeholder-text">Welcome to Mushaf Viewer</div>
                     <div class="placeholder-sub">Select a riwayah from the file list to begin reading</div>
                 </div>
@@ -2061,7 +2058,7 @@
             } else {
                 ph.innerHTML = '<div class="placeholder-icon" style="color:var(--accent);font-weight:700;font-size:1.5rem;">OK</div><div class="placeholder-text">Cache cleared</div>';
                 setTimeout(() => {
-                    ph.innerHTML = '<div class="placeholder-icon surah-font" style="font-size:2rem;color:var(--accent);">&#1575;&#1604;&#1602;&#1585;&#1570;&#1606;</div><div class="placeholder-text">Welcome to Mushaf Viewer</div><div class="placeholder-sub">Select a riwayah from the file list to begin reading</div>';
+                    ph.innerHTML = '<div class="placeholder-icon"><img src="icons/quran.svg" alt="Quran"></div><div class="placeholder-text">Welcome to Mushaf Viewer</div><div class="placeholder-sub">Select a riwayah from the file list to begin reading</div>';
                 }, 1200);
             }
         }
