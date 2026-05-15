@@ -414,20 +414,48 @@
 
         .page-sheet, .surah-sheet, .ayah-sheet {
             position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 52%;
+            left: 50%;
             z-index: 250;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            border-top: 1px solid var(--border);
-            padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
-            transform: translateY(110%);
-            transition: transform var(--transition-spring);
+            transform: translate(-50%, -50%) scale(0.92);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+            width: 90vw;
+            max-width: 320px;
             max-height: 70vh;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
-        .page-sheet.open, .surah-sheet.open, .ayah-sheet.open { transform: translateY(0); }
+        .page-sheet.open, .surah-sheet.open, .ayah-sheet.open {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        .page-title-bar, .surah-title-bar, .ayah-title-bar {
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: var(--accent);
+            padding: 12px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+        .page-list-box, .surah-list-box, .ayah-list-box {
+            width: 100%;
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            padding: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
         .riwayah-sheet {
             position: fixed;
@@ -439,7 +467,7 @@
             visibility: hidden;
             transition: all var(--transition-normal);
             width: 90vw;
-            max-width: 400px;
+            max-width: 320px;
             max-height: 70vh;
             display: flex;
             flex-direction: column;
@@ -501,7 +529,8 @@
         .page-list, .surah-list, .ayah-list, .riwayah-list {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+            overflow-y: auto;
         }
         .page-list-item, .ayah-list-item {
             display: flex;
@@ -1050,7 +1079,7 @@
             .nav-btn { width: 44px; height: 44px; }
             .nav-page-trigger { height: 44px; padding: 0 14px; font-size: 1rem; }
             .nav-surah-trigger { height: 44px; padding: 0 14px; font-size: 1rem; }
-            .goto-sheet, .task-sheet, .page-sheet, .surah-sheet, .ayah-sheet, .riwayah-sheet {
+            .goto-sheet, .task-sheet {
                 left: auto;
                 right: 24px;
                 width: 420px;
@@ -1064,8 +1093,25 @@
                 visibility: hidden;
                 transition: all var(--transition-normal);
             }
-            .goto-sheet.open, .task-sheet.open, .page-sheet.open, .surah-sheet.open, .ayah-sheet.open, .riwayah-sheet.open {
+            .goto-sheet.open, .task-sheet.open {
                 transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            .page-sheet, .surah-sheet, .ayah-sheet, .riwayah-sheet {
+                top: 50%;
+                left: 50%;
+                right: auto;
+                bottom: auto;
+                width: 90vw;
+                max-width: 360px;
+                transform: translate(-50%, -50%) scale(0.92);
+                opacity: 0;
+                visibility: hidden;
+                transition: all var(--transition-normal);
+            }
+            .page-sheet.open, .surah-sheet.open, .ayah-sheet.open, .riwayah-sheet.open {
+                transform: translate(-50%, -50%) scale(1);
                 opacity: 1;
                 visibility: visible;
             }
@@ -1266,27 +1312,24 @@
     </div>
 
     <div class="page-sheet" id="pageSheet">
-        <div class="sheet-header">
-            <div class="sheet-title">Go to Page</div>
-            <button class="sheet-close" onclick="closePagePopup()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
+        <div class="page-title-bar">Go to Page</div>
+        <div class="page-list-box">
+            <div class="page-list" id="pageList"></div>
         </div>
-        <div class="page-list" id="pageList"></div>
     </div>
 
     <div class="surah-sheet" id="surahSheet">
-        <div class="sheet-header">
-            <div class="sheet-title">Select Surah</div>
-            <button class="sheet-close" onclick="closeSurahPopup()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
+        <div class="surah-title-bar">Select Surah</div>
+        <div class="surah-list-box">
+            <div class="surah-list" id="surahList"></div>
         </div>
-        <div class="surah-list" id="surahList"></div>
     </div>
 
     <div class="ayah-sheet" id="ayahSheet">
-        <div class="sheet-header">
-            <div class="sheet-title">Select Ayah</div>
-            <button class="sheet-close" onclick="closeAyahPopup()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
+        <div class="ayah-title-bar">Select Ayah</div>
+        <div class="ayah-list-box">
+            <div class="ayah-list" id="ayahList"></div>
         </div>
-        <div class="ayah-list" id="ayahList"></div>
     </div>
 
     <div class="riwayah-sheet" id="riwayahSheet">
