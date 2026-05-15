@@ -438,8 +438,40 @@
         .page-list-item:active, .surah-list-item:active, .ayah-list-item:active { transform: scale(0.98); }
         .page-list-item.active, .ayah-list-item.active { background: var(--accent); color: white; border-color: var(--accent); }
         .surah-list-item.active { background: var(--accent-muted); color: var(--accent); border-color: var(--accent); }
-        .surah-list-item .surah-name { flex: 1; text-align: left; }
-        .surah-list-item .surah-number { font-size: 0.75rem; opacity: 0.6; margin-left: 8px; }
+        .surah-star {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            flex-shrink: 0;
+        }
+        .surah-name {
+            flex: 1;
+            text-align: right;
+            font-size: 1rem;
+        }
+        .surah-ayah-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+        }
+        .surah-ayah-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .surah-ayah-count {
+            color: var(--accent);
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
 
         .overlay {
             position: fixed;
@@ -1232,6 +1264,10 @@
             return mushafData.surah_statistics.find(s => s.surah_number === num) || null;
         }
 
+        function toArabicNumerals(num) {
+            return num.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+        }
+
         function findPageBySurahAyah(surah, ayah) {
             if (!mushafData) return null;
             for (const page of mushafData.pages) {
@@ -1879,7 +1915,12 @@
             mushafData.surah_statistics.forEach(surah => {
                 const item = document.createElement('div');
                 item.className = 'surah-list-item' + (surah.surah_number === currentSurah ? ' active' : '');
-                item.innerHTML = '<span class="surah-name surah-font">surah' + String(surah.surah_number).padStart(3, '0') + '</span><span class="surah-number">' + surah.total_ayahs + ' ayahs</span>';
+                item.innerHTML = '<span class="surah-star">' + surah.surah_number + '</span>' +
+                    '<span class="surah-name surah-font">surah' + String(surah.surah_number).padStart(3, '0') + '</span>' +
+                    '<span class="surah-ayah-info">' +
+                    '<span class="surah-ayah-label">الآيات</span>' +
+                    '<span class="surah-ayah-count">' + toArabicNumerals(surah.total_ayahs) + '</span>' +
+                    '</span>';
                 item.onclick = () => { closeSurahPopup(); openAyahPopup(surah.surah_number); };
                 list.appendChild(item);
             });
