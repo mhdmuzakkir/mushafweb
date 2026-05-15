@@ -861,8 +861,7 @@
             transition: all var(--transition-fast);
         }
         .fab:active { transform: scale(0.92); background: var(--accent-hover); }
-        .fab-goto { right: 80px; background: var(--bg-elevated); border: 1px solid var(--border); }
-        .fab-goto:active { background: var(--bg-tertiary); }
+        /* fab-goto removed — replaced by surah trigger in bottom nav */
         .fab-tasks { right: 16px; }
 
         .dual-input {
@@ -1062,7 +1061,7 @@
                 <div class="gesture-overlay" id="gestureOverlay"></div>
             </div>
 
-            <button class="fab fab-goto" id="gotoFab" onclick="openGotoSheet()" title="Go to Surah"><img src="icons/go-to-surah.svg" style="width:24px;height:24px;filter:invert(1);" alt="Go"></button>
+
             <button class="fab fab-tasks" id="taskFab" onclick="toggleTaskSheet()" title="Add Tasks"><img src="icons/pencil.svg" style="width:24px;height:24px;filter:invert(1);" alt="Tasks"></button>
             <div class="bottom-nav" id="bottomNav">
                 <div class="bottom-nav-inner">
