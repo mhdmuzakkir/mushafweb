@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#0f1419">
+    <meta name="theme-color" content="#140008">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>مُصْحَف — Mushaf Viewer</title>
     <style>
         :root {
-            --bg-deep: #0a0f0d;
-            --bg-primary: #0f1419;
-            --bg-secondary: #1a1f24;
-            --bg-tertiary: #252b32;
-            --bg-elevated: #2d353e;
-            --accent: #10b981;
-            --accent-hover: #34d399;
-            --accent-muted: rgba(16, 185, 129, 0.15);
-            --accent-glow: rgba(16, 185, 129, 0.3);
+            --bg-deep: #0d0005;
+            --bg-primary: #140008;
+            --bg-secondary: #1f000c;
+            --bg-tertiary: #2d0012;
+            --bg-elevated: #3d0019;
+            --accent: #8b0046;
+            --accent-hover: #a6004a;
+            --accent-muted: rgba(139, 0, 70, 0.15);
+            --accent-glow: rgba(139, 0, 70, 0.3);
             --text-primary: #f0f4f8;
-            --text-secondary: #94a3b8;
-            --text-tertiary: #64748b;
-            --border: rgba(148, 163, 184, 0.1);
-            --border-hover: rgba(148, 163, 184, 0.2);
+            --text-secondary: #b8a0a8;
+            --text-tertiary: #8a6a74;
+            --border: rgba(184, 160, 168, 0.1);
+            --border-hover: rgba(184, 160, 168, 0.2);
             --warning: #f59e0b;
             --info: #3b82f6;
             --success: #10b981;
@@ -263,31 +263,16 @@
             border-radius: 24px;
         }
 
-        .swipe-hint {
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--accent);
-            color: var(--bg-deep);
-            padding: 10px 16px;
-            border-radius: var(--radius-md);
-        }
-
-        .swipe-hint.left { left: 16px; }
-        .swipe-hint.right { right: 16px; }
-
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             z-index: 100;
-            padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+            padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
             display: flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(0deg, rgba(15,20,25,0.98) 0%, rgba(15,20,25,0.85) 70%, transparent 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            justify-content: center;
+            pointer-events: none;
             transition: opacity var(--transition-normal), transform var(--transition-normal);
         }
 
@@ -297,14 +282,30 @@
             pointer-events: none;
         }
 
+        .bottom-nav-inner {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(45, 0, 18, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(184, 160, 168, 0.12);
+            border-radius: 9999px;
+            padding: 6px 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            pointer-events: auto;
+            max-width: 420px;
+            width: 100%;
+        }
+
         .nav-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-md);
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -313,9 +314,9 @@
             flex-shrink: 0;
         }
 
-        .nav-btn:active { transform: scale(0.92); }
-        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-        .nav-btn.primary { background: var(--accent); color: var(--bg-deep); border-color: var(--accent); }
+        .nav-btn:active { transform: scale(0.92); color: var(--text-primary); }
+        .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+        .nav-btn.primary { background: var(--accent); color: white; }
         .nav-btn.primary:active { background: var(--accent-hover); }
 
         .nav-center {
@@ -327,21 +328,21 @@
         }
 
         .nav-page-input {
-            width: 64px;
+            width: 56px;
             text-align: center;
-            padding: 10px;
-            background: var(--bg-secondary);
+            padding: 8px 4px;
+            background: rgba(0,0,0,0.2);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             font-family: inherit;
         }
 
         .nav-page-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
 
-        .nav-total { font-size: 0.8rem; color: var(--text-tertiary); font-weight: 500; }
+        .nav-total { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; }
 
         .overlay {
             position: fixed;
@@ -810,12 +811,11 @@
             .top-bar { left: 340px; padding-top: 16px; }
             .bottom-nav {
                 left: 340px;
-                position: fixed;
                 padding: 14px 24px;
-                gap: 12px;
             }
-            .nav-btn { width: 48px; height: 48px; }
-            .nav-page-input { width: 80px; padding: 12px; font-size: 1.1rem; }
+            .bottom-nav-inner { max-width: 480px; padding: 8px 14px; gap: 8px; }
+            .nav-btn { width: 44px; height: 44px; }
+            .nav-page-input { width: 72px; padding: 10px; font-size: 1rem; }
             .goto-sheet, .task-sheet {
                 left: auto;
                 right: 24px;
@@ -838,6 +838,78 @@
             .overlay { z-index: 240; display: none !important; }
             .top-btn { display: none; }
         }
+
+        /* Custom Dropdown */
+        .custom-dropdown {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+        .custom-dropdown-trigger {
+            width: 100%;
+            padding: 14px 40px 14px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all var(--transition-fast);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-dropdown-trigger:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .custom-dropdown-trigger::after {
+            content: '';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid var(--text-secondary);
+            pointer-events: none;
+        }
+        .custom-dropdown.open .custom-dropdown-trigger::after {
+            border-top: none;
+            border-bottom: 5px solid var(--text-secondary);
+        }
+        .custom-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            max-height: 240px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            z-index: 300;
+            display: none;
+            box-shadow: var(--shadow-lg);
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-dropdown.open .custom-dropdown-menu { display: block; }
+        .custom-dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: background var(--transition-fast);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .custom-dropdown-item:hover, .custom-dropdown-item:active { background: var(--bg-tertiary); }
+        .custom-dropdown-item.selected { background: var(--accent-muted); color: var(--accent); }
+        .custom-dropdown-item.empty { color: var(--text-tertiary); cursor: default; }
+        .custom-dropdown-item.empty:hover { background: transparent; }
     </style>
 </head>
 <body>
@@ -857,10 +929,9 @@
                     </select>
                 </div>
                 <div class="filter-pills">
-                    <button class="pill active" onclick="filterFiles('all')">All</button>
-                    <button class="pill" onclick="filterFiles('ajza')">In Progress</button>
-                    <button class="pill" onclick="filterFiles('review')">Review</button>
-                    <button class="pill" onclick="filterFiles('completed')">Done</button>
+                    <button class="pill" data-filter="ajza" onclick="toggleFilter('ajza')">In Progress</button>
+                    <button class="pill" data-filter="review" onclick="toggleFilter('review')">Review</button>
+                    <button class="pill" data-filter="completed" onclick="toggleFilter('completed')">Done</button>
                 </div>
                 <div id="fileList"></div>
             </div>
@@ -879,8 +950,6 @@
             </div>
 
             <div class="hint zoom-hint" id="zoomHint">Pinch to zoom</div>
-            <div class="hint swipe-hint left" id="swipeLeft">&lt; Previous</div>
-            <div class="hint swipe-hint right" id="swipeRight">Next &gt;</div>
 
             <div id="imageWrapper">
                 <div class="placeholder" id="placeholder">
@@ -895,15 +964,17 @@
             <button class="fab fab-goto" id="gotoFab" onclick="openGotoSheet()" title="Go to Surah"><img src="icons/go-to-surah.svg" style="width:24px;height:24px;" alt="Go"></button>
             <button class="fab fab-tasks" id="taskFab" onclick="toggleTaskSheet()" title="Add Tasks"><img src="icons/pencil.svg" style="width:24px;height:24px;filter:brightness(0);" alt="Tasks"></button>
             <div class="bottom-nav" id="bottomNav">
-                <button class="nav-btn" id="firstBtn" onclick="goToFile(0)" disabled title="First"><img src="icons/angle-small-left-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="First"></button>
-                <button class="nav-btn" id="prevBtn" onclick="prevFile()" disabled title="Previous"><img src="icons/angle-small-left.svg" style="width:18px;height:18px;filter:invert(1);" alt="Previous"></button>
-                <div class="nav-center">
-                    <input type="number" class="nav-page-input" id="pageInput" min="1" max="604" placeholder="001">
-                    <span class="nav-total" id="totalPagesSpan"></span>
-                    <button class="nav-btn primary" onclick="goToPage()" title="Go" style="font-weight:700;font-size:0.75rem;">GO</button>
+                <div class="bottom-nav-inner">
+                    <button class="nav-btn" id="lastBtn" onclick="goToFile(filteredFiles.length-1)" disabled title="Last"><img src="icons/angle-small-left-double.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="Last"></button>
+                    <button class="nav-btn" id="nextBtn" onclick="nextFile()" disabled title="Next"><img src="icons/angle-small-left.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="Next"></button>
+                    <div class="nav-center">
+                        <input type="number" class="nav-page-input" id="pageInput" min="1" max="604" placeholder="001">
+                        <span class="nav-total" id="totalPagesSpan"></span>
+                        <button class="nav-btn primary" onclick="goToPage()" title="Go" style="font-weight:700;font-size:0.7rem;">GO</button>
+                    </div>
+                    <button class="nav-btn" id="prevBtn" onclick="prevFile()" disabled title="Previous"><img src="icons/angle-small-right.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="Previous"></button>
+                    <button class="nav-btn" id="firstBtn" onclick="goToFile(0)" disabled title="First"><img src="icons/angle-small-right-double.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="First"></button>
                 </div>
-                <button class="nav-btn" id="nextBtn" onclick="nextFile()" disabled title="Next"><img src="icons/angle-small-right.svg" style="width:18px;height:18px;filter:invert(1);" alt="Next"></button>
-                <button class="nav-btn" id="lastBtn" onclick="goToFile(filteredFiles.length-1)" disabled title="Last"><img src="icons/angle-small-right-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="Last"></button>
             </div>
         </div>
     </div>
@@ -920,18 +991,20 @@
             <label class="input-label">Surah</label>
             <div class="dual-input">
                 <input type="number" class="input-field" id="gotoSurahInput" min="1" max="114" placeholder="1-114" oninput="onSurahInput()">
-                <select id="gotoSurahSelect" class="input-field surah-select" onchange="onSurahSelectChange()">
-                    <option value="">---</option>
-                </select>
+                <div class="custom-dropdown" id="surahDropdown">
+                    <button type="button" class="custom-dropdown-trigger surah-select" id="gotoSurahTrigger" onclick="toggleDropdown('surahDropdown')">---</button>
+                    <div class="custom-dropdown-menu" id="gotoSurahMenu"></div>
+                </div>
             </div>
         </div>
         <div class="input-group">
             <label class="input-label">Ayah</label>
             <div class="dual-input">
                 <input type="number" class="input-field" id="gotoAyahInput" min="1" placeholder="Ayah" disabled oninput="onAyahInput()">
-                <select id="gotoAyahSelect" class="input-field ayah-select" onchange="onAyahSelectChange()" disabled>
-                    <option value="">-</option>
-                </select>
+                <div class="custom-dropdown" id="ayahDropdown">
+                    <button type="button" class="custom-dropdown-trigger ayah-select" id="gotoAyahTrigger" onclick="toggleDropdown('ayahDropdown')" disabled>-</button>
+                    <div class="custom-dropdown-menu" id="gotoAyahMenu"></div>
+                </div>
             </div>
         </div>
         <div class="input-group">
@@ -1091,12 +1164,8 @@
                 selectFile(0);
             }
             document.querySelectorAll('.pill').forEach(p => {
-                p.classList.toggle('active',
-                    lf === 'all' ? p.textContent === 'All' :
-                    lf === 'ajza' ? p.textContent === 'In Progress' :
-                    lf === 'review' ? p.textContent === 'Review' :
-                    p.textContent === 'Done'
-                );
+                const f = p.getAttribute('data-filter');
+                p.classList.toggle('active', f === lf);
             });
         }
 
@@ -1125,16 +1194,16 @@
             } catch (err) { console.error(err); }
         }
 
-        function filterFiles(status) {
-            currentFilter = status;
-            document.querySelectorAll('.pill').forEach(p => {
-                p.classList.toggle('active',
-                    status === 'all' ? p.textContent === 'All' :
-                    status === 'ajza' ? p.textContent === 'In Progress' :
-                    status === 'review' ? p.textContent === 'Review' :
-                    p.textContent === 'Done'
-                );
-            });
+        function toggleFilter(status) {
+            const pill = document.querySelector('.pill[data-filter="' + status + '"]');
+            if (currentFilter === status) {
+                currentFilter = 'all';
+                pill.classList.remove('active');
+            } else {
+                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                currentFilter = status;
+                pill.classList.add('active');
+            }
             applyFilter();
         }
 
@@ -1376,19 +1445,11 @@
             const dt = Date.now() - touchStartTime;
             if (currentScale > 1.2) return;
             if (dt > 400 || Math.abs(dx) < 50 || Math.abs(dy) > 100) return;
-            if (dx > 0) {
-                showSwipeHint('left');
-                if (currentFileIndex > 0) prevFile();
-            } else {
-                showSwipeHint('right');
+            if (dx < 0) {
                 if (currentFileIndex < filteredFiles.length - 1) nextFile();
+            } else {
+                if (currentFileIndex > 0) prevFile();
             }
-        }
-
-        function showSwipeHint(dir) {
-            const el = document.getElementById(dir === 'left' ? 'swipeLeft' : 'swipeRight');
-            el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 300);
         }
 
         function setupUIAutoHide() {
@@ -1432,6 +1493,7 @@
         function closeAllSheets() {
             document.querySelectorAll('.goto-sheet, .task-sheet').forEach(s => s.classList.remove('open'));
             document.getElementById('sheetOverlay').classList.remove('active');
+            document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
         }
 
         function toggleTaskSheet() {
@@ -1441,40 +1503,54 @@
         }
 
         function populateSurahDropdown() {
-            const select = document.getElementById('gotoSurahSelect');
-            select.innerHTML = '<option value="">---</option>';
+            const menu = document.getElementById('gotoSurahMenu');
+            menu.innerHTML = '';
+            const empty = document.createElement('div');
+            empty.className = 'custom-dropdown-item empty';
+            empty.textContent = '---';
+            empty.onclick = () => selectSurah('');
+            menu.appendChild(empty);
             for (let i = 1; i <= 114; i++) {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = 'surah' + String(i).padStart(3, '0');
-                select.appendChild(opt);
+                const item = document.createElement('div');
+                item.className = 'custom-dropdown-item';
+                item.textContent = 'surah' + String(i).padStart(3, '0');
+                item.dataset.value = i;
+                item.onclick = () => selectSurah(i);
+                menu.appendChild(item);
             }
         }
 
         function populateAyahDropdown(surahNumber) {
-            const select = document.getElementById('gotoAyahSelect');
+            const menu = document.getElementById('gotoAyahMenu');
+            const trigger = document.getElementById('gotoAyahTrigger');
             const input = document.getElementById('gotoAyahInput');
-            select.innerHTML = '';
+            menu.innerHTML = '';
             if (!surahNumber || !mushafData) {
-                const opt = document.createElement('option');
-                opt.value = ''; opt.textContent = '-';
-                select.appendChild(opt);
-                select.disabled = true;
+                const empty = document.createElement('div');
+                empty.className = 'custom-dropdown-item empty';
+                empty.textContent = '-';
+                menu.appendChild(empty);
+                trigger.disabled = true;
+                trigger.textContent = '-';
                 if (input) { input.disabled = true; input.value = ''; input.removeAttribute('max'); }
                 return;
             }
             const surah = mushafData.surah_statistics.find(s => s.surah_number === parseInt(surahNumber));
             if (!surah) {
-                select.disabled = true;
+                trigger.disabled = true;
+                trigger.textContent = '-';
                 if (input) { input.disabled = true; input.value = ''; input.removeAttribute('max'); }
                 return;
             }
             for (let i = 1; i <= surah.total_ayahs; i++) {
-                const opt = document.createElement('option');
-                opt.value = i; opt.textContent = i;
-                select.appendChild(opt);
+                const item = document.createElement('div');
+                item.className = 'custom-dropdown-item';
+                item.textContent = i;
+                item.dataset.value = i;
+                item.onclick = () => selectAyah(i);
+                menu.appendChild(item);
             }
-            select.disabled = false;
+            trigger.disabled = false;
             if (input) {
                 input.disabled = false;
                 input.setAttribute('max', surah.total_ayahs);
@@ -1482,60 +1558,79 @@
             }
         }
 
+        function toggleDropdown(id) {
+            const dd = document.getElementById(id);
+            const isOpen = dd.classList.toggle('open');
+            if (isOpen) {
+                const closeOnClick = (e) => {
+                    if (!dd.contains(e.target)) {
+                        dd.classList.remove('open');
+                        document.removeEventListener('click', closeOnClick);
+                    }
+                };
+                setTimeout(() => document.addEventListener('click', closeOnClick), 0);
+            }
+        }
+
+        function selectSurah(val) {
+            const trigger = document.getElementById('gotoSurahTrigger');
+            const input = document.getElementById('gotoSurahInput');
+            const ayahInput = document.getElementById('gotoAyahInput');
+            document.getElementById('surahDropdown').classList.remove('open');
+            if (val === '') {
+                trigger.textContent = '---';
+                input.value = '';
+                populateAyahDropdown(null);
+                updateGotoBtn();
+                return;
+            }
+            trigger.textContent = 'surah' + String(val).padStart(3, '0');
+            input.value = val;
+            populateAyahDropdown(val);
+            if (ayahInput) {
+                setTimeout(() => { ayahInput.value = '1'; selectAyah(1); }, 50);
+            }
+            document.getElementById('gotoPageInput').value = '';
+            updateGotoBtn();
+        }
+
+        function selectAyah(val) {
+            const trigger = document.getElementById('gotoAyahTrigger');
+            const input = document.getElementById('gotoAyahInput');
+            document.getElementById('ayahDropdown').classList.remove('open');
+            trigger.textContent = val;
+            if (input) input.value = val;
+            document.getElementById('gotoPageInput').value = '';
+            updateGotoBtn();
+        }
+
         function onSurahInput() {
             const input = document.getElementById('gotoSurahInput');
-            const select = document.getElementById('gotoSurahSelect');
             const ayahInput = document.getElementById('gotoAyahInput');
             let val = parseInt(input.value);
             if (val > 114) { val = 114; input.value = 114; }
             if (val < 1) {
                 input.value = '';
-                select.value = '';
-                populateAyahDropdown(null);
+                selectSurah('');
                 updateGotoBtn();
                 return;
             }
-            select.value = val;
-            populateAyahDropdown(val);
+            selectSurah(val);
             if (ayahInput) {
-                setTimeout(() => { ayahInput.value = '1'; document.getElementById('gotoAyahSelect').value = '1'; }, 50);
+                setTimeout(() => { ayahInput.value = '1'; selectAyah(1); }, 50);
             }
             document.getElementById('gotoPageInput').value = '';
-            updateGotoBtn();
-        }
-
-        function onSurahSelectChange() {
-            const select = document.getElementById('gotoSurahSelect');
-            const input = document.getElementById('gotoSurahInput');
-            const val = parseInt(select.value);
-            if (val) {
-                input.value = val;
-                populateAyahDropdown(val);
-                const ayahInput = document.getElementById('gotoAyahInput');
-                if (ayahInput) {
-                    setTimeout(() => { ayahInput.value = '1'; document.getElementById('gotoAyahSelect').value = '1'; }, 50);
-                }
-                document.getElementById('gotoPageInput').value = '';
-            }
             updateGotoBtn();
         }
 
         function onAyahInput() {
             const input = document.getElementById('gotoAyahInput');
-            const select = document.getElementById('gotoAyahSelect');
             const max = parseInt(input.getAttribute('max')) || 999;
             let val = parseInt(input.value);
             if (val > max) { val = max; input.value = max; }
             if (val < 1) { input.value = ''; }
-            if (select && val >= 1 && val <= max) select.value = val;
-            document.getElementById('gotoPageInput').value = '';
-            updateGotoBtn();
-        }
-
-        function onAyahSelectChange() {
-            const select = document.getElementById('gotoAyahSelect');
-            const input = document.getElementById('gotoAyahInput');
-            if (input && select.value) input.value = select.value;
+            const trigger = document.getElementById('gotoAyahTrigger');
+            if (val >= 1 && val <= max) trigger.textContent = val;
             document.getElementById('gotoPageInput').value = '';
             updateGotoBtn();
         }
@@ -1546,11 +1641,11 @@
             if (val > 604) { val = 604; input.value = 604; }
             if (val < 1) { input.value = ''; }
             document.getElementById('gotoSurahInput').value = '';
-            document.getElementById('gotoSurahSelect').value = '';
+            selectSurah('');
             document.getElementById('gotoAyahInput').value = '';
             document.getElementById('gotoAyahInput').disabled = true;
-            document.getElementById('gotoAyahSelect').innerHTML = '<option value="">-</option>';
-            document.getElementById('gotoAyahSelect').disabled = true;
+            document.getElementById('gotoAyahTrigger').textContent = '-';
+            document.getElementById('gotoAyahTrigger').disabled = true;
             populateAyahDropdown(null);
             updateGotoBtn();
         }
@@ -1593,7 +1688,9 @@
             const file = currentFiles.find(f => parseInt(f.page) === targetPage);
             if (!file) { alert('Page ' + targetPage + ' not found in current riwayah files'); return; }
             if (currentFilter !== 'all' && file.status !== currentFilter) {
-                filterFiles('all');
+                currentFilter = 'all';
+                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                applyFilter();
             }
             const idx = filteredFiles.findIndex(f => parseInt(f.page) === targetPage);
             if (idx !== -1) { selectFile(idx); closeAllSheets(); }
@@ -1608,7 +1705,11 @@
             if (!p || p < 1) return;
             const file = currentFiles.find(f => parseInt(f.page) === p);
             if (!file) { alert('Page not found in current riwayah!'); return; }
-            if (currentFilter !== 'all' && file.status !== currentFilter) filterFiles('all');
+            if (currentFilter !== 'all' && file.status !== currentFilter) {
+                currentFilter = 'all';
+                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                applyFilter();
+            }
             const idx = filteredFiles.findIndex(f => parseInt(f.page) === p);
             if (idx !== -1) { selectFile(idx); saveSession(); }
         }
