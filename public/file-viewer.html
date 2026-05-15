@@ -676,7 +676,7 @@
             width: 100%;
             padding: 16px;
             background: var(--accent);
-            color: var(--bg-deep);
+            color: #ffffff;
             border: none;
             border-radius: var(--radius-md);
             font-size: 1rem;
@@ -1083,25 +1083,6 @@
         document.addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft') { e.preventDefault(); prevFile(); }
             if (e.key === 'ArrowRight') { e.preventDefault(); nextFile(); }
-            if (e.key === 'c' || e.key === 'C') {
-                creamOverlayEnabled = !creamOverlayEnabled;
-                const status = creamOverlayEnabled ? 'ON' : 'OFF';
-                const hint = document.createElement('div');
-                hint.textContent = 'Cream overlay: ' + status;
-                hint.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:white;padding:14px 28px;border-radius:12px;font-size:1rem;font-weight:600;z-index:500;pointer-events:none;transition:opacity 0.3s;';
-                document.body.appendChild(hint);
-                setTimeout(() => { hint.style.opacity = '0'; setTimeout(() => hint.remove(), 300); }, 800);
-                if (currentFileIndex >= 0 && filteredFiles[currentFileIndex]) {
-                    const file = filteredFiles[currentFileIndex];
-                    const cacheKey = file.riwayah + '-' + file.page + '-' + file.status;
-                    const img = document.getElementById('webpViewer');
-                    if (creamOverlayEnabled && imageBlobCache[cacheKey + '_cream']) {
-                        img.src = imageBlobCache[cacheKey + '_cream'];
-                    } else if (imageBlobCache[cacheKey]) {
-                        img.src = imageBlobCache[cacheKey];
-                    }
-                }
-            }
         });
 
         async function loadMushafData() {
