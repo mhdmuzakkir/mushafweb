@@ -338,7 +338,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 0;
         }
 
         .nav-page-input {
@@ -359,9 +359,12 @@
         .nav-total { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; }
 
         .nav-page-trigger {
-            min-width: 56px;
-            text-align: center;
-            padding: 8px 12px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 12px;
             background: rgba(0,0,0,0.2);
             border: 1px solid var(--border);
             border-radius: var(--radius-md) 0 0 var(--radius-md);
@@ -378,8 +381,11 @@
 
         .nav-surah-trigger {
             flex: 1;
-            text-align: center;
-            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 12px;
             background: rgba(0,0,0,0.2);
             border: 1px solid var(--border);
             border-radius: 0 var(--radius-md) var(--radius-md) 0;
@@ -906,8 +912,8 @@
             }
             .bottom-nav-inner { max-width: 480px; padding: 8px 14px; gap: 8px; }
             .nav-btn { width: 44px; height: 44px; }
-            .nav-page-trigger { min-width: 72px; padding: 10px 14px; font-size: 1rem; }
-            .nav-surah-trigger { padding: 10px 14px; font-size: 1rem; }
+            .nav-page-trigger { height: 44px; padding: 0 14px; font-size: 1rem; }
+            .nav-surah-trigger { height: 44px; padding: 0 14px; font-size: 1rem; }
             .goto-sheet, .task-sheet, .page-sheet, .surah-sheet, .ayah-sheet {
                 left: auto;
                 right: 24px;
@@ -1237,7 +1243,7 @@
                 if (fs === surah && ts === surah) {
                     if (ayah >= fa && ayah <= ta) return page.page_number;
                 } else if (fs === surah && ts !== surah) {
-                    if (ayah === fa) return page.page_number;
+                    if (ayah >= fa) return page.page_number;
                 } else if (ts === surah && fs !== surah) {
                     if (ayah >= 1 && ayah <= ta) return page.page_number;
                 } else if (fs < surah && surah < ts) {
