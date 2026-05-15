@@ -189,7 +189,7 @@
             left: 0;
             right: 0;
             z-index: 100;
-            padding: 12px 16px 28px;
+            padding: 12px 16px;
             padding-top: env(safe-area-inset-top, 12px);
             display: flex;
             align-items: center;
@@ -223,21 +223,9 @@
 
         .top-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.2); }
 
-        .top-info {
-            position: absolute;
-            bottom: 6px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-        }
-
         .riwayah-trigger {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
             background: #5c002e;
-            border: 1px solid var(--accent);
+            border: 1px solid #5c002e;
             border-radius: var(--radius-md);
             cursor: pointer;
             padding: 6px 16px;
@@ -246,15 +234,8 @@
             color: #ffffff;
             font-size: 0.9rem;
             font-weight: 600;
-            z-index: 1;
         }
         .riwayah-trigger:hover { background: #6b0036; border-color: #6b0036; }
-
-        .top-subtitle {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.7);
-            margin-top: 4px;
-        }
 
         .top-badge {
             padding: 6px 14px;
@@ -1243,9 +1224,6 @@
             <div class="top-bar" id="topBar">
                 <button class="top-btn" onclick="toggleDrawer()" title="Files"><img src="icons/menu-burger.svg" style="width:20px;height:20px;filter:invert(1);" alt="Menu"></button>
                 <button class="riwayah-trigger" id="headerTitle" onclick="openRiwayahPopup()">Select a riwayah</button>
-                <div class="top-info">
-                    <div class="top-subtitle" id="headerSubtitle">riwayah available</div>
-                </div>
                 <div class="top-badge tasks-zero" id="taskBadge" onclick="showExistingTasks()" style="display:none;">
                     0 Tasks
                 </div>
@@ -1574,7 +1552,6 @@
             document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
             document.getElementById('file-item-' + index)?.classList.add('active');
             document.getElementById('headerTitle').textContent = file.riwayah;
-            document.getElementById('headerSubtitle').textContent = statusConfig[file.status]?.label || file.status;
             document.getElementById('pageTrigger').textContent = String(file.page).padStart(3, '0');
             const surahNum = getCurrentPageSurah(file.page);
             document.getElementById('surahTrigger').textContent = surahNum ? 'surah' + String(surahNum).padStart(3, '0') : '---';
