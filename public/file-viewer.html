@@ -113,6 +113,20 @@
             background: #f3f0e6;
         }
 
+        .img-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        .cream-overlay {
+            position: absolute;
+            inset: 0;
+            background: #f3f0e6;
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
         .gesture-overlay {
             position: absolute;
             inset: 0;
@@ -955,7 +969,10 @@
                     <div class="placeholder-text">Welcome to Mushaf Viewer</div>
                     <div class="placeholder-sub">Select a riwayah from the file list to begin reading</div>
                 </div>
-                <img id="webpViewer" alt="Mushaf Page">
+                <div class="img-wrap">
+                    <img id="webpViewer" alt="Mushaf Page">
+                    <div class="cream-overlay"></div>
+                </div>
                 <div class="gesture-overlay" id="gestureOverlay"></div>
             </div>
 
@@ -963,7 +980,7 @@
             <button class="fab fab-tasks" id="taskFab" onclick="toggleTaskSheet()" title="Add Tasks"><img src="icons/pencil.svg" style="width:24px;height:24px;filter:invert(1);" alt="Tasks"></button>
             <div class="bottom-nav" id="bottomNav">
                 <div class="bottom-nav-inner">
-                    <button class="nav-btn" id="lastBtn" onclick="goToFile(filteredFiles.length-1)" disabled title="Last"><img src="icons/angle-small-left-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="Last"></button>
+                    <button class="nav-btn" id="lastBtn" onclick="goToNextJuz()" disabled title="Next Juz"><img src="icons/angle-small-left-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="Next Juz"></button>
                     <button class="nav-btn" id="nextBtn" onclick="nextFile()" disabled title="Next"><img src="icons/angle-small-left.svg" style="width:18px;height:18px;filter:invert(1);" alt="Next"></button>
                     <div class="nav-center">
                         <input type="number" class="nav-page-input" id="pageInput" min="1" max="604" placeholder="001">
@@ -971,7 +988,7 @@
                         <button class="nav-btn primary" onclick="goToPage()" title="Go" style="font-weight:700;font-size:0.7rem;">GO</button>
                     </div>
                     <button class="nav-btn" id="prevBtn" onclick="prevFile()" disabled title="Previous"><img src="icons/angle-small-right.svg" style="width:18px;height:18px;filter:invert(1);" alt="Previous"></button>
-                    <button class="nav-btn" id="firstBtn" onclick="goToFile(0)" disabled title="First"><img src="icons/angle-small-right-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="First"></button>
+                    <button class="nav-btn" id="firstBtn" onclick="goToPrevJuz()" disabled title="Prev Juz"><img src="icons/angle-small-right-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="Prev Juz"></button>
                 </div>
             </div>
         </div>
@@ -1051,12 +1068,21 @@
         let mushafData = null;
         let uiVisible = true;
         let uiHideTimer = null;
-        let creamOverlayEnabled = true;
+
 
         const statusConfig = {
             ajza: { label: 'In Progress', color: '#f59e0b' },
             review: { label: 'In Review', color: '#3b82f6' },
             completed: { label: 'Completed', color: '#10b981' }
+        };
+
+        const juzStartPages = {
+            1: 1, 2: 22, 3: 42, 4: 62, 5: 82,
+            6: 102, 7: 122, 8: 142, 9: 162, 10: 182,
+            11: 202, 12: 222, 13: 242, 14: 262, 15: 282,
+            16: 302, 17: 322, 18: 342, 19: 362, 20: 382,
+            21: 402, 22: 422, 23: 442, 24: 462, 25: 482,
+            26: 502, 27: 522, 28: 542, 29: 562, 30: 582
         };
 
         const req = indexedDB.open(DBNAME, DBVERSION);
@@ -1227,49 +1253,6 @@
             resetUIHideTimer();
         }
 
-        function processImageToCream(blobUrl) {
-            if (!creamOverlayEnabled) return Promise.resolve(blobUrl);
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.naturalWidth;
-                    canvas.height = img.naturalHeight;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    // Multiply blend with cream color: white becomes cream, black stays black
-                    ctx.globalCompositeOperation = 'multiply';
-                    ctx.fillStyle = '#f3f0e6';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.globalCompositeOperation = 'source-over';
-                    canvas.toBlob((processedBlob) => {
-                        if (processedBlob) resolve(URL.createObjectURL(processedBlob));
-                        else resolve(blobUrl);
-                    }, 'image/png');
-                };
-                img.onerror = () => resolve(blobUrl);
-                img.src = blobUrl;
-            });
-        }
-
-        async function displayProcessedImage(cacheKey, blobUrl, index) {
-            const img = document.getElementById('webpViewer');
-            const placeholder = document.getElementById('placeholder');
-            const processedKey = cacheKey + '_cream';
-            if (imageBlobCache[processedKey]) {
-                img.src = imageBlobCache[processedKey];
-                img.onload = () => { placeholder.style.display = 'none'; img.style.display = 'block'; };
-                preloadNext(index);
-                return;
-            }
-            const processedUrl = await processImageToCream(blobUrl);
-            imageBlobCache[processedKey] = processedUrl;
-            img.src = processedUrl;
-            img.onload = () => { placeholder.style.display = 'none'; img.style.display = 'block'; };
-            preloadNext(index);
-        }
-
         async function loadFile(riwayah, page, status, index) {
             const placeholder = document.getElementById('placeholder');
             const img = document.getElementById('webpViewer');
@@ -1278,14 +1261,10 @@
             placeholder.innerHTML = '<div class="loader"></div>';
             placeholder.style.display = 'flex';
             resetZoom();
-            if (imageBlobCache[cacheKey + '_cream']) {
-                img.src = imageBlobCache[cacheKey + '_cream'];
+            if (imageBlobCache[cacheKey]) {
+                img.src = imageBlobCache[cacheKey];
                 img.onload = () => { placeholder.style.display = 'none'; img.style.display = 'block'; };
                 preloadNext(index);
-                return;
-            }
-            if (imageBlobCache[cacheKey]) {
-                displayProcessedImage(cacheKey, imageBlobCache[cacheKey], index);
                 return;
             }
             if (db) {
@@ -1298,7 +1277,9 @@
                             const blob = new Blob([getReq.result.data], { type: 'image/webp' });
                             const url = URL.createObjectURL(blob);
                             imageBlobCache[cacheKey] = url;
-                            displayProcessedImage(cacheKey, url, index);
+                            img.src = url;
+                            img.onload = () => { placeholder.style.display = 'none'; img.style.display = 'block'; };
+                            preloadNext(index);
                         } else {
                             await fetchAndCache(riwayah, page, status, cacheKey, index);
                         }
@@ -1325,10 +1306,12 @@
                         tx.objectStore('images').put({ key: cacheKey, data: ab, timestamp: Date.now() });
                     } catch (e) { console.error('IDB save failed', e); }
                 }
-                displayProcessedImage(cacheKey, blobUrl, index);
+                img.src = blobUrl;
+                img.onload = () => { placeholder.style.display = 'none'; img.style.display = 'block'; };
+                preloadNext(index);
             } catch (err) {
                 console.error('Load failed', err);
-                document.getElementById('placeholder').innerHTML = '<div class="placeholder-icon" style="background:rgba(239,68,68,0.15);"><img src="icons/error.svg" style="width:28px;height:28px;" alt="Error"></div><div class="placeholder-text">Failed to load image</div><div class="placeholder-sub">Check your connection and try again</div>';
+                document.getElementById('placeholder').innerHTML = '<div class="placeholder-icon" style="background:rgba(239,68,68,0.15);"><img src="icons/error.svg" style="width:28px;height:28px;filter:invert(1);" alt="Error"></div><div class="placeholder-text">Failed to load image</div><div class="placeholder-sub">Check your connection and try again</div>';
             }
         }
 
@@ -1337,7 +1320,7 @@
                 if (idx < 0 || idx >= filteredFiles.length) return;
                 const file = filteredFiles[idx];
                 const key = file.riwayah + '-' + file.page + '-' + file.status;
-                if (imageBlobCache[key] || imageBlobCache[key + '_cream']) return;
+                if (imageBlobCache[key]) return;
                 try {
                     const res = await fetch(APIBASEURL + 'serve-file.php?riwayah=' + encodeURIComponent(file.riwayah) + '&page=' + file.page + '&status=' + file.status);
                     const blob = await res.blob();
@@ -1348,9 +1331,6 @@
                         const tx = db.transaction('images', 'readwrite');
                         tx.objectStore('images').put({ key, data: ab, timestamp: Date.now() });
                     }
-                    // Process in background for instant display when navigated
-                    const processedUrl = await processImageToCream(blobUrl);
-                    imageBlobCache[key + '_cream'] = processedUrl;
                 } catch (e) {}
             });
         }
@@ -1679,6 +1659,49 @@
         function nextFile() { if (currentFileIndex < filteredFiles.length - 1) { selectFile(currentFileIndex + 1); saveSession(); } }
         function goToFile(index) { if (index >= 0 && index < filteredFiles.length) { selectFile(index); saveSession(); } }
 
+        function goToNextJuz() {
+            if (currentFileIndex < 0 || !filteredFiles[currentFileIndex]) return;
+            const currentFile = filteredFiles[currentFileIndex];
+            const currentJuz = parseInt(currentFile.juz);
+            const nextJuz = currentJuz + 1;
+            if (nextJuz > 30) return;
+            const targetPage = juzStartPages[nextJuz];
+            const file = currentFiles.find(f => parseInt(f.page) === targetPage);
+            if (!file) return;
+            if (currentFilter !== 'all' && file.status !== currentFilter) {
+                currentFilter = 'all';
+                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                applyFilter();
+            }
+            const idx = filteredFiles.findIndex(f => parseInt(f.page) === targetPage);
+            if (idx !== -1) { selectFile(idx); saveSession(); }
+        }
+
+        function goToPrevJuz() {
+            if (currentFileIndex < 0 || !filteredFiles[currentFileIndex]) return;
+            const currentFile = filteredFiles[currentFileIndex];
+            const currentJuz = parseInt(currentFile.juz);
+            const currentPage = parseInt(currentFile.page);
+            const juzStartPage = juzStartPages[currentJuz];
+            let targetPage;
+            if (currentPage === juzStartPage) {
+                const prevJuz = currentJuz - 1;
+                if (prevJuz < 1) return;
+                targetPage = juzStartPages[prevJuz];
+            } else {
+                targetPage = juzStartPage;
+            }
+            const file = currentFiles.find(f => parseInt(f.page) === targetPage);
+            if (!file) return;
+            if (currentFilter !== 'all' && file.status !== currentFilter) {
+                currentFilter = 'all';
+                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                applyFilter();
+            }
+            const idx = filteredFiles.findIndex(f => parseInt(f.page) === targetPage);
+            if (idx !== -1) { selectFile(idx); saveSession(); }
+        }
+
         function goToPage() {
             let p = parseInt(document.getElementById('pageInput').value);
             if (!p || p < 1) return;
@@ -1694,10 +1717,18 @@
         }
 
         function updateNavButtons() {
-            document.getElementById('firstBtn').disabled = currentFileIndex <= 0;
             document.getElementById('prevBtn').disabled = currentFileIndex <= 0;
             document.getElementById('nextBtn').disabled = currentFileIndex >= filteredFiles.length - 1;
-            document.getElementById('lastBtn').disabled = currentFileIndex >= filteredFiles.length - 1;
+            if (currentFileIndex < 0 || !filteredFiles[currentFileIndex]) {
+                document.getElementById('firstBtn').disabled = true;
+                document.getElementById('lastBtn').disabled = true;
+                return;
+            }
+            const currentFile = filteredFiles[currentFileIndex];
+            const currentJuz = parseInt(currentFile.juz);
+            const currentPage = parseInt(currentFile.page);
+            document.getElementById('firstBtn').disabled = currentJuz === 1 && currentPage === 1;
+            document.getElementById('lastBtn').disabled = currentJuz >= 30;
         }
 
         async function loadTasksForPage(riwayah, page) {
