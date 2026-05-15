@@ -230,11 +230,20 @@
             gap: 2px;
         }
 
-        .top-title {
+        .top-title, .riwayah-trigger {
             font-size: 0.95rem;
             font-weight: 600;
             color: #ffffff;
         }
+        .riwayah-trigger {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-family: inherit;
+            transition: opacity var(--transition-fast);
+        }
+        .riwayah-trigger:hover { opacity: 0.75; }
 
         .top-subtitle {
             font-size: 0.75rem;
@@ -398,7 +407,7 @@
         .nav-surah-trigger:hover { background: #6b0036; border-color: #6b0036; }
         .nav-surah-trigger:active { transform: scale(0.95); }
 
-        .page-sheet, .surah-sheet, .ayah-sheet {
+        .page-sheet, .surah-sheet, .ayah-sheet, .riwayah-sheet {
             position: fixed;
             left: 0;
             right: 0;
@@ -413,9 +422,9 @@
             max-height: 70vh;
             overflow-y: auto;
         }
-        .page-sheet.open, .surah-sheet.open, .ayah-sheet.open { transform: translateY(0); }
+        .page-sheet.open, .surah-sheet.open, .ayah-sheet.open, .riwayah-sheet.open { transform: translateY(0); }
 
-        .page-list, .surah-list, .ayah-list {
+        .page-list, .surah-list, .ayah-list, .riwayah-list {
             display: flex;
             flex-direction: column;
             gap: 4px;
@@ -450,9 +459,9 @@
             transition: all var(--transition-fast);
             user-select: none;
         }
-        .page-list-item:hover, .surah-list-item:hover, .ayah-list-item:hover { background: var(--bg-elevated); border-color: var(--accent); color: var(--text-primary); }
-        .page-list-item:active, .surah-list-item:active, .ayah-list-item:active { transform: scale(0.98); }
-        .page-list-item.active, .ayah-list-item.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .page-list-item:hover, .surah-list-item:hover, .ayah-list-item:hover, .riwayah-list-item:hover { background: var(--bg-elevated); border-color: var(--accent); color: var(--text-primary); }
+        .page-list-item:active, .surah-list-item:active, .ayah-list-item:active, .riwayah-list-item:active { transform: scale(0.98); }
+        .page-list-item.active, .ayah-list-item.active, .riwayah-list-item.active { background: var(--accent); color: white; border-color: var(--accent); }
         .surah-list-item.active { background: var(--accent-muted); color: var(--accent); border-color: var(--accent); }
         .surah-star {
             position: relative;
@@ -966,7 +975,7 @@
             .nav-btn { width: 44px; height: 44px; }
             .nav-page-trigger { height: 44px; padding: 0 14px; font-size: 1rem; }
             .nav-surah-trigger { height: 44px; padding: 0 14px; font-size: 1rem; }
-            .goto-sheet, .task-sheet, .page-sheet, .surah-sheet, .ayah-sheet {
+            .goto-sheet, .task-sheet, .page-sheet, .surah-sheet, .ayah-sheet, .riwayah-sheet {
                 left: auto;
                 right: 24px;
                 width: 420px;
@@ -980,7 +989,7 @@
                 visibility: hidden;
                 transition: all var(--transition-normal);
             }
-            .goto-sheet.open, .task-sheet.open, .page-sheet.open, .surah-sheet.open, .ayah-sheet.open {
+            .goto-sheet.open, .task-sheet.open, .page-sheet.open, .surah-sheet.open, .ayah-sheet.open, .riwayah-sheet.open {
                 transform: translateY(0);
                 opacity: 1;
                 visibility: visible;
@@ -1091,7 +1100,7 @@
             <div class="top-bar" id="topBar">
                 <button class="top-btn" onclick="toggleDrawer()" title="Files"><img src="icons/menu-burger.svg" style="width:20px;height:20px;filter:invert(1);" alt="Menu"></button>
                 <div class="top-info">
-                    <div class="top-title" id="headerTitle">Select a riwayah</div>
+                    <button class="riwayah-trigger" id="headerTitle" onclick="openRiwayahPopup()">Select a riwayah</button>
                     <div class="top-subtitle" id="headerSubtitle">Open the file list to begin</div>
                 </div>
                 <div class="top-badge tasks-zero" id="taskBadge" onclick="showExistingTasks()" style="display:none;">
@@ -1203,6 +1212,14 @@
             <button class="sheet-close" onclick="closeAyahPopup()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
         </div>
         <div class="ayah-list" id="ayahList"></div>
+    </div>
+
+    <div class="riwayah-sheet" id="riwayahSheet">
+        <div class="sheet-header">
+            <div class="sheet-title">Select Riwayah</div>
+            <button class="sheet-close" onclick="closeRiwayahPopup()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
+        </div>
+        <div class="riwayah-list" id="riwayahList"></div>
     </div>
 
     <div class="tasks-modal" id="tasksModal" onclick="hideTasksModal(event)">
@@ -1349,6 +1366,7 @@
                     opt.value = r; opt.textContent = r;
                     sel.appendChild(opt);
                 });
+                window.availableRiwayahs = list;
             } catch (err) { console.error('Load riwayahs failed', err); }
         }
 
@@ -1404,8 +1422,8 @@
             const file = filteredFiles[index];
             document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
             document.getElementById('file-item-' + index)?.classList.add('active');
-            document.getElementById('headerTitle').textContent = 'Page ' + file.page;
-            document.getElementById('headerSubtitle').textContent = file.riwayah + ' \u00b7 Juz ' + file.juz + ' \u00b7 ' + (statusConfig[file.status]?.label || file.status);
+            document.getElementById('headerTitle').textContent = file.riwayah;
+            document.getElementById('headerSubtitle').textContent = statusConfig[file.status]?.label || file.status;
             document.getElementById('pageTrigger').textContent = String(file.page).padStart(3, '0');
             const surahNum = getCurrentPageSurah(file.page);
             document.getElementById('surahTrigger').textContent = surahNum ? 'surah' + String(surahNum).padStart(3, '0') : '---';
@@ -1619,7 +1637,7 @@
         }
 
         function closeAllSheets() {
-            document.querySelectorAll('.goto-sheet, .task-sheet, .page-sheet, .surah-sheet, .ayah-sheet').forEach(s => s.classList.remove('open'));
+            document.querySelectorAll('.goto-sheet, .task-sheet, .page-sheet, .surah-sheet, .ayah-sheet, .riwayah-sheet').forEach(s => s.classList.remove('open'));
             document.getElementById('sheetOverlay').classList.remove('active');
             document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
         }
@@ -1960,6 +1978,30 @@
         function closeAyahPopup() {
             document.getElementById('ayahSheet').classList.remove('open');
             document.getElementById('sheetOverlay').classList.remove('active');
+        }
+
+        function openRiwayahPopup() {
+            populateRiwayahList();
+            document.getElementById('riwayahSheet').classList.add('open');
+            document.getElementById('sheetOverlay').classList.add('active');
+        }
+
+        function closeRiwayahPopup() {
+            document.getElementById('riwayahSheet').classList.remove('open');
+            document.getElementById('sheetOverlay').classList.remove('active');
+        }
+
+        function populateRiwayahList() {
+            const list = document.getElementById('riwayahList');
+            list.innerHTML = '';
+            if (!window.availableRiwayahs) return;
+            window.availableRiwayahs.forEach(r => {
+                const item = document.createElement('div');
+                item.className = 'riwayah-list-item' + (r === currentRiwayah ? ' active' : '');
+                item.textContent = r;
+                item.onclick = () => { loadFiles(r); closeRiwayahPopup(); };
+                list.appendChild(item);
+            });
         }
 
         function populateAyahList(surahNumber) {
