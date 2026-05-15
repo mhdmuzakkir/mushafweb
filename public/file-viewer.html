@@ -236,18 +236,23 @@
             color: #ffffff;
         }
         .riwayah-trigger {
-            background: transparent;
-            border: none;
+            background: #5c002e;
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-md);
             cursor: pointer;
-            padding: 0;
+            padding: 6px 16px;
             font-family: inherit;
-            transition: opacity var(--transition-fast);
+            transition: all var(--transition-fast);
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
-        .riwayah-trigger:hover { opacity: 0.75; }
+        .riwayah-trigger:hover { background: #6b0036; border-color: #6b0036; }
 
         .top-subtitle {
             font-size: 0.75rem;
             color: rgba(255,255,255,0.7);
+            margin-top: 4px;
         }
 
         .top-badge {
@@ -407,7 +412,7 @@
         .nav-surah-trigger:hover { background: #6b0036; border-color: #6b0036; }
         .nav-surah-trigger:active { transform: scale(0.95); }
 
-        .page-sheet, .surah-sheet, .ayah-sheet, .riwayah-sheet {
+        .page-sheet, .surah-sheet, .ayah-sheet {
             position: fixed;
             left: 0;
             right: 0;
@@ -422,7 +427,32 @@
             max-height: 70vh;
             overflow-y: auto;
         }
-        .page-sheet.open, .surah-sheet.open, .ayah-sheet.open, .riwayah-sheet.open { transform: translateY(0); }
+        .page-sheet.open, .surah-sheet.open, .ayah-sheet.open { transform: translateY(0); }
+
+        .riwayah-sheet {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index: 250;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            padding: 20px;
+            transform: translate(-50%, -50%) scale(0.92);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+            width: 90vw;
+            max-width: 400px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+        .riwayah-sheet.open {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
 
         .page-list, .surah-list, .ayah-list, .riwayah-list {
             display: flex;
@@ -1101,7 +1131,7 @@
                 <button class="top-btn" onclick="toggleDrawer()" title="Files"><img src="icons/menu-burger.svg" style="width:20px;height:20px;filter:invert(1);" alt="Menu"></button>
                 <div class="top-info">
                     <button class="riwayah-trigger" id="headerTitle" onclick="openRiwayahPopup()">Select a riwayah</button>
-                    <div class="top-subtitle" id="headerSubtitle">Open the file list to begin</div>
+                    <div class="top-subtitle" id="headerSubtitle">riwayah available</div>
                 </div>
                 <div class="top-badge tasks-zero" id="taskBadge" onclick="showExistingTasks()" style="display:none;">
                     0 Tasks
