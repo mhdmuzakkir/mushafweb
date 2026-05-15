@@ -918,7 +918,7 @@
                     <div class="drawer-title">Mushaf Viewer</div>
                     <div class="drawer-subtitle">Select riwayah to browse</div>
                 </div>
-                <button onclick="toggleDrawer()" style="width:36px;height:36px;border-radius:50%;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><img src="icons/close-exit.svg" style="width:16px;height:16px;" alt="Close"></button>
+                <button onclick="toggleDrawer()" style="width:36px;height:36px;border-radius:50%;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><img src="icons/close-exit.svg" style="width:16px;height:16px;filter:invert(1);" alt="Close"></button>
             </div>
             <div class="drawer-body">
                 <div class="input-group" style="margin-bottom:12px;">
@@ -959,19 +959,19 @@
                 <div class="gesture-overlay" id="gestureOverlay"></div>
             </div>
 
-            <button class="fab fab-goto" id="gotoFab" onclick="openGotoSheet()" title="Go to Surah"><img src="icons/go-to-surah.svg" style="width:24px;height:24px;" alt="Go"></button>
-            <button class="fab fab-tasks" id="taskFab" onclick="toggleTaskSheet()" title="Add Tasks"><img src="icons/pencil.svg" style="width:24px;height:24px;filter:brightness(0);" alt="Tasks"></button>
+            <button class="fab fab-goto" id="gotoFab" onclick="openGotoSheet()" title="Go to Surah"><img src="icons/go-to-surah.svg" style="width:24px;height:24px;filter:invert(1);" alt="Go"></button>
+            <button class="fab fab-tasks" id="taskFab" onclick="toggleTaskSheet()" title="Add Tasks"><img src="icons/pencil.svg" style="width:24px;height:24px;filter:invert(1);" alt="Tasks"></button>
             <div class="bottom-nav" id="bottomNav">
                 <div class="bottom-nav-inner">
-                    <button class="nav-btn" id="lastBtn" onclick="goToFile(filteredFiles.length-1)" disabled title="Last"><img src="icons/angle-small-left-double.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="Last"></button>
-                    <button class="nav-btn" id="nextBtn" onclick="nextFile()" disabled title="Next"><img src="icons/angle-small-left.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="Next"></button>
+                    <button class="nav-btn" id="lastBtn" onclick="goToFile(filteredFiles.length-1)" disabled title="Last"><img src="icons/angle-small-left-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="Last"></button>
+                    <button class="nav-btn" id="nextBtn" onclick="nextFile()" disabled title="Next"><img src="icons/angle-small-left.svg" style="width:18px;height:18px;filter:invert(1);" alt="Next"></button>
                     <div class="nav-center">
                         <input type="number" class="nav-page-input" id="pageInput" min="1" max="604" placeholder="001">
                         <span class="nav-total" id="totalPagesSpan"></span>
                         <button class="nav-btn primary" onclick="goToPage()" title="Go" style="font-weight:700;font-size:0.7rem;">GO</button>
                     </div>
-                    <button class="nav-btn" id="prevBtn" onclick="prevFile()" disabled title="Previous"><img src="icons/angle-small-right.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="Previous"></button>
-                    <button class="nav-btn" id="firstBtn" onclick="goToFile(0)" disabled title="First"><img src="icons/angle-small-right-double.svg" style="width:18px;height:18px;filter:invert(0.7);" alt="First"></button>
+                    <button class="nav-btn" id="prevBtn" onclick="prevFile()" disabled title="Previous"><img src="icons/angle-small-right.svg" style="width:18px;height:18px;filter:invert(1);" alt="Previous"></button>
+                    <button class="nav-btn" id="firstBtn" onclick="goToFile(0)" disabled title="First"><img src="icons/angle-small-right-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="First"></button>
                 </div>
             </div>
         </div>
@@ -983,7 +983,7 @@
     <div class="goto-sheet" id="gotoSheet">
         <div class="sheet-header">
             <div class="sheet-title">Navigate</div>
-            <button class="sheet-close" onclick="closeAllSheets()"><img src="icons/close-exit.svg" style="width:18px;height:18px;" alt="Close"></button>
+            <button class="sheet-close" onclick="closeAllSheets()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
         </div>
         <div class="input-group">
             <label class="input-label">Surah</label>
@@ -1015,7 +1015,7 @@
     <div class="task-sheet" id="taskSheet">
         <div class="sheet-header">
             <div class="sheet-title">Add Tasks</div>
-            <button class="sheet-close" onclick="toggleTaskSheet()"><img src="icons/close-exit.svg" style="width:18px;height:18px;" alt="Close"></button>
+            <button class="sheet-close" onclick="toggleTaskSheet()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
         </div>
         <div class="task-meta">
             <div class="task-meta-item">Page <span id="taskPageSpan">&mdash;</span></div>
