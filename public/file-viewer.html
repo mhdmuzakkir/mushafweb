@@ -434,17 +434,38 @@
             opacity: 1;
             visibility: visible;
         }
-        .page-title-bar, .surah-title-bar, .ayah-title-bar {
+        .page-title-bar, .surah-title-bar, .ayah-title-bar, .riwayah-title-bar {
+            position: relative;
             width: 100%;
             font-size: 1rem;
             font-weight: 700;
             color: #ffffff;
             background: var(--accent);
-            padding: 12px;
+            padding: 12px 40px 12px 12px;
             border-radius: var(--radius-lg);
             text-align: center;
             box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .modal-close {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.15); }
         .page-list-box, .surah-list-box, .ayah-list-box {
             width: 100%;
             background: var(--bg-primary);
@@ -1312,28 +1333,40 @@
     </div>
 
     <div class="page-sheet" id="pageSheet">
-        <div class="page-title-bar">Go to Page</div>
+        <div class="page-title-bar">
+            <span>Go to Page</span>
+            <button class="modal-close" onclick="closePagePopup()"><img src="icons/close-exit.svg" style="width:14px;height:14px;filter:invert(1);" alt="Close"></button>
+        </div>
         <div class="page-list-box">
             <div class="page-list" id="pageList"></div>
         </div>
     </div>
 
     <div class="surah-sheet" id="surahSheet">
-        <div class="surah-title-bar">Select Surah</div>
+        <div class="surah-title-bar">
+            <span>Select Surah</span>
+            <button class="modal-close" onclick="closeSurahPopup()"><img src="icons/close-exit.svg" style="width:14px;height:14px;filter:invert(1);" alt="Close"></button>
+        </div>
         <div class="surah-list-box">
             <div class="surah-list" id="surahList"></div>
         </div>
     </div>
 
     <div class="ayah-sheet" id="ayahSheet">
-        <div class="ayah-title-bar">Select Ayah</div>
+        <div class="ayah-title-bar">
+            <span>Select Ayah</span>
+            <button class="modal-close" onclick="closeAyahPopup()"><img src="icons/close-exit.svg" style="width:14px;height:14px;filter:invert(1);" alt="Close"></button>
+        </div>
         <div class="ayah-list-box">
             <div class="ayah-list" id="ayahList"></div>
         </div>
     </div>
 
     <div class="riwayah-sheet" id="riwayahSheet">
-        <div class="riwayah-title-bar">Select Riwayah</div>
+        <div class="riwayah-title-bar">
+            <span>Select Riwayah</span>
+            <button class="modal-close" onclick="closeRiwayahPopup()"><img src="icons/close-exit.svg" style="width:14px;height:14px;filter:invert(1);" alt="Close"></button>
+        </div>
         <div class="riwayah-list-box">
             <div class="riwayah-list" id="riwayahList"></div>
         </div>
