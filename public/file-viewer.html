@@ -358,6 +358,64 @@
 
         .nav-total { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; }
 
+        .nav-page-trigger {
+            min-width: 56px;
+            text-align: center;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .nav-page-trigger:hover { border-color: var(--accent); }
+        .nav-page-trigger:active { transform: scale(0.95); }
+
+        .page-sheet {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 250;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            border-top: 1px solid var(--border);
+            padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+            transform: translateY(110%);
+            transition: transform var(--transition-spring);
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .page-sheet.open { transform: translateY(0); }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+        .page-grid-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            user-select: none;
+        }
+        .page-grid-item:hover { background: var(--bg-elevated); border-color: var(--accent); color: var(--text-primary); }
+        .page-grid-item:active { transform: scale(0.92); }
+        .page-grid-item.active { background: var(--accent); color: white; border-color: var(--accent); }
+
         .overlay {
             position: fixed;
             inset: 0;
@@ -827,8 +885,8 @@
             }
             .bottom-nav-inner { max-width: 480px; padding: 8px 14px; gap: 8px; }
             .nav-btn { width: 44px; height: 44px; }
-            .nav-page-input { width: 72px; padding: 10px; font-size: 1rem; }
-            .goto-sheet, .task-sheet {
+            .nav-page-trigger { min-width: 72px; padding: 10px 14px; font-size: 1rem; }
+            .goto-sheet, .task-sheet, .page-sheet {
                 left: auto;
                 right: 24px;
                 width: 420px;
@@ -842,7 +900,7 @@
                 visibility: hidden;
                 transition: all var(--transition-normal);
             }
-            .goto-sheet.open, .task-sheet.open {
+            .goto-sheet.open, .task-sheet.open, .page-sheet.open {
                 transform: translateY(0);
                 opacity: 1;
                 visibility: visible;
@@ -983,9 +1041,7 @@
                     <button class="nav-btn" id="lastBtn" onclick="goToNextJuz()" disabled title="Next Juz"><img src="icons/angle-small-left-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="Next Juz"></button>
                     <button class="nav-btn" id="nextBtn" onclick="nextFile()" disabled title="Next"><img src="icons/angle-small-left.svg" style="width:18px;height:18px;filter:invert(1);" alt="Next"></button>
                     <div class="nav-center">
-                        <input type="number" class="nav-page-input" id="pageInput" min="1" max="604" placeholder="001">
-                        <span class="nav-total" id="totalPagesSpan"></span>
-                        <button class="nav-btn primary" onclick="goToPage()" title="Go" style="font-weight:700;font-size:0.7rem;">GO</button>
+                        <button class="nav-page-trigger" id="pageTrigger" onclick="openPagePopup()">001</button>
                     </div>
                     <button class="nav-btn" id="prevBtn" onclick="prevFile()" disabled title="Previous"><img src="icons/angle-small-right.svg" style="width:18px;height:18px;filter:invert(1);" alt="Previous"></button>
                     <button class="nav-btn" id="firstBtn" onclick="goToPrevJuz()" disabled title="Prev Juz"><img src="icons/angle-small-right-double.svg" style="width:18px;height:18px;filter:invert(1);" alt="Prev Juz"></button>
@@ -1042,6 +1098,14 @@
         <div id="taskContainer"></div>
         <button class="add-task-btn" onclick="addTaskCard()">+ Add Another Task</button>
         <button class="submit-btn" id="submitBtn" onclick="submitTasks()" disabled>Submit Tasks</button>
+    </div>
+
+    <div class="page-sheet" id="pageSheet">
+        <div class="sheet-header">
+            <div class="sheet-title">Go to Page</div>
+            <button class="sheet-close" onclick="closePagePopup()"><img src="icons/close-exit.svg" style="width:18px;height:18px;filter:invert(1);" alt="Close"></button>
+        </div>
+        <div class="page-grid" id="pageGrid"></div>
     </div>
 
     <div class="tasks-modal" id="tasksModal" onclick="hideTasksModal(event)">
@@ -1194,7 +1258,7 @@
                 const res = await fetch(APIBASEURL + 'get-files.php?riwayah=' + encodeURIComponent(riwayah));
                 currentFiles = await res.json();
                 applyFilter();
-                document.getElementById('totalPagesSpan').textContent = '/ ' + currentFiles.length;
+                // total removed
                 if (autoSelect && filteredFiles.length > 0) selectFile(0);
             } catch (err) { console.error(err); }
         }
@@ -1241,7 +1305,7 @@
             document.getElementById('file-item-' + index)?.classList.add('active');
             document.getElementById('headerTitle').textContent = 'Page ' + file.page;
             document.getElementById('headerSubtitle').textContent = file.riwayah + ' \u00b7 Juz ' + file.juz + ' \u00b7 ' + (statusConfig[file.status]?.label || file.status);
-            document.getElementById('pageInput').value = file.page;
+            document.getElementById('pageTrigger').textContent = String(file.page).padStart(3, '0');
             document.getElementById('taskPageSpan').textContent = file.page;
             document.getElementById('taskRiwayahSpan').textContent = file.riwayah;
             const stSpan = document.getElementById('taskStatusSpan');
@@ -1452,7 +1516,7 @@
         }
 
         function closeAllSheets() {
-            document.querySelectorAll('.goto-sheet, .task-sheet').forEach(s => s.classList.remove('open'));
+            document.querySelectorAll('.goto-sheet, .task-sheet, .page-sheet').forEach(s => s.classList.remove('open'));
             document.getElementById('sheetOverlay').classList.remove('active');
             document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
         }
@@ -1704,11 +1768,38 @@
             if (idx !== -1) { selectFile(idx); saveSession(); }
         }
 
-        function goToPage() {
-            let p = parseInt(document.getElementById('pageInput').value);
+        function openPagePopup() {
+            populatePageGrid();
+            document.getElementById('pageSheet').classList.add('open');
+            document.getElementById('sheetOverlay').classList.add('active');
+        }
+
+        function closePagePopup() {
+            document.getElementById('pageSheet').classList.remove('open');
+            document.getElementById('sheetOverlay').classList.remove('active');
+        }
+
+        function populatePageGrid() {
+            const grid = document.getElementById('pageGrid');
+            grid.innerHTML = '';
+            const currentPage = currentFileIndex >= 0 && filteredFiles[currentFileIndex] ? parseInt(filteredFiles[currentFileIndex].page) : 0;
+            currentFiles.forEach(file => {
+                const btn = document.createElement('div');
+                btn.className = 'page-grid-item' + (parseInt(file.page) === currentPage ? ' active' : '');
+                btn.textContent = parseInt(file.page);
+                btn.onclick = () => goToPageFromPopup(parseInt(file.page));
+                grid.appendChild(btn);
+            });
+            setTimeout(() => {
+                const active = grid.querySelector('.page-grid-item.active');
+                if (active) active.scrollIntoView({ behavior: 'instant', block: 'center' });
+            }, 50);
+        }
+
+        function goToPageFromPopup(p) {
             if (!p || p < 1) return;
             const file = currentFiles.find(f => parseInt(f.page) === p);
-            if (!file) { alert('Page not found in current riwayah!'); return; }
+            if (!file) return;
             if (currentFilter !== 'all' && file.status !== currentFilter) {
                 currentFilter = 'all';
                 document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
@@ -1716,6 +1807,7 @@
             }
             const idx = filteredFiles.findIndex(f => parseInt(f.page) === p);
             if (idx !== -1) { selectFile(idx); saveSession(); }
+            closePagePopup();
         }
 
         function updateNavButtons() {
