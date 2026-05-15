@@ -1,0 +1,251 @@
+/* Login Screen */
+.login-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #1a1a2e;
+    padding: 20px;
+}
+
+.login-box {
+    background: #16213e;
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.login-box h2 {
+    color: #e94560;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.login-box p {
+    color: #a0a0a0;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.error-text {
+    color: #e94560;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* User Bar */
+.user-bar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #0f3460;
+}
+
+.user-bar span {
+    color: #e94560;
+    font-weight: bold;
+    flex: 1;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    background: #0f3460;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: #533483;
+}
+
+/* Last Location */
+.last-location {
+    margin-top: 10px;
+    padding: 10px;
+    background: #0f3460;
+    border-radius: 6px;
+    color: #a0a0a0;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #e94560;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: 10px;
+}
+
+/* Suggestions */
+.suggestions-box {
+    margin: 20px 0;
+    padding: 15px;
+    background: #0f3460;
+    border-radius: 8px;
+}
+
+.suggestions-box label {
+    display: block;
+    margin-bottom: 10px;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
+
+.suggestions-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggestion-chip {
+    background: #16213e;
+    color: #e94560;
+    border: 1px solid #e94560;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+}
+
+.suggestion-chip:hover {
+    background: #e94560;
+    color: white;
+}
+
+.suggestion-chip-small {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #a0a0a0;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin: 5px 5px 0 0;
+    cursor: pointer;
+    border: 1px solid #533483;
+}
+
+.suggestion-chip-small:hover {
+    background: #533483;
+    color: white;
+}
+
+.task-suggestions {
+    margin-top: 8px;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #16213e;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: #e94560;
+    cursor: pointer;
+}
+
+.logs-list {
+    margin-top: 20px;
+}
+
+.log-entry {
+    padding: 15px;
+    background: #1a1a2e;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border-left: 3px solid #e94560;
+}
+
+.log-time {
+    font-size: 0.8rem;
+    color: #a0a0a0;
+    margin-bottom: 5px;
+}
+
+.log-action {
+    color: white;
+    font-size: 0.95rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* PDF Viewer Improvements for Android */
+#pdfFrame {
+    transform: translateZ(0); /* Hardware accel */
+    will-change: transform;
+}
+
+.viewer-section {
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS/Android */
+}
+
+/* High-quality PDF Canvas Rendering for Android */
+#pdfCanvas {
+    display: none;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    /* Critical for sharp text on high-DPI screens */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    transform: translateZ(0); /* Force GPU acceleration */
+    backface-visibility: hidden; /* Prevent flickering */
+}
+
+/* PDF Wrapper for proper centering and scrolling */
+#pdfWrapper {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: #525659;
+    text-align: center;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+/* Ensure placeholder is centered */
+.pdf-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    background: var(--charcoal);
+}

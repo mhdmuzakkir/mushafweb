@@ -1,0 +1,27 @@
+# Mushaf Task Manager - Apache Configuration
+
+# Enable rewrite engine
+RewriteEngine On
+
+# Redirect root to public folder
+RewriteRule ^$ public/file-viewer.html [L]
+
+# Allow direct access to api/ and admin/ folders
+RewriteCond %{REQUEST_URI} ^/api/ [OR]
+RewriteCond %{REQUEST_URI} ^/admin/ [OR]
+RewriteCond %{REQUEST_URI} ^/scripts/
+RewriteRule ^ - [L]
+
+# Serve public folder content directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Protect sensitive directories
+<IfModule mod_rewrite.c>
+    RewriteRule ^(mushaftasks|ai-files|cache|users|data|vendor)/ - [F,L]
+</IfModule>
+
+# PHP settings
+php_value memory_limit 512M
+php_value max_execution_time 300
