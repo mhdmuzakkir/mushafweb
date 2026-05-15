@@ -434,10 +434,10 @@
             top: 52%;
             left: 50%;
             z-index: 250;
-            background: var(--bg-secondary);
+            background: var(--bg-primary);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border);
-            padding: 0;
+            padding: 20px;
             transform: translate(-50%, -50%) scale(0.92);
             opacity: 0;
             visibility: hidden;
@@ -456,26 +456,24 @@
             visibility: visible;
         }
         .riwayah-sheet .sheet-header {
-            background: var(--accent);
-            color: #ffffff;
-            padding: 20px 20px 8px;
             text-align: center;
             flex-shrink: 0;
+            margin-bottom: 16px;
         }
         .riwayah-sheet .sheet-title {
             display: inline-block;
             font-size: 1rem;
             font-weight: 700;
-            color: var(--accent);
-            background: var(--bg-secondary);
-            padding: 10px 24px;
+            color: #ffffff;
+            background: var(--accent);
+            padding: 10px 28px;
             border-radius: var(--radius-lg);
         }
         .riwayah-list {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+            padding: 0 4px 4px;
             overflow-y: auto;
         }
         .riwayah-list-item {
@@ -495,7 +493,7 @@
         }
         .riwayah-list-item:hover { background: var(--bg-elevated); border-color: var(--accent); color: var(--text-primary); }
         .riwayah-list-item:active { transform: scale(0.98); }
-        .riwayah-list-item.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .riwayah-list-item.active { background: var(--accent-muted); color: var(--accent); border-color: var(--accent); }
 
         .page-list, .surah-list, .ayah-list, .riwayah-list {
             display: flex;
