@@ -17,7 +17,7 @@ $folderMap = [
 ];
 
 $folderName = $folderMap[$status] ?? 'Ajza';
-$baseFolder = __DIR__ . '/../ai-files/' . $riwayah . '/' . $folderName;
+$baseFolder = __DIR__ . '/../webp/' . $riwayah . '/' . $folderName;
 
 $padded = str_pad($page, 3, '0', STR_PAD_LEFT);
 

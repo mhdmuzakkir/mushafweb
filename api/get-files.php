@@ -9,8 +9,8 @@ if (empty($riwayah)) {
     exit;
 }
 
-// Updated path: ai-files is now in parent directory
-$baseFolder = __DIR__ . '/../ai-files/' . $riwayah;
+// Updated path: webp is now in parent directory
+$baseFolder = __DIR__ . '/../webp/' . $riwayah;
 $files = [];
 
 // 1. Scan Ajza (with juz subfolders 01-30)
@@ -63,7 +63,7 @@ function scanJuzFolders($basePath, $status, $riwayah, &$files) {
                     'riwayah' => $riwayah,
                     'status' => $status,
                     'juz' => str_pad($i, 2, '0', STR_PAD_LEFT),
-                    'path' => str_replace(__DIR__ . '/../ai-files/', '', $fullPath)
+                    'path' => str_replace(__DIR__ . '/../webp/', '', $fullPath)
                 ];
             }
         }
@@ -90,7 +90,7 @@ function scanFlatFolder($path, $status, $riwayah, &$files) {
                 'riwayah' => $riwayah,
                 'status' => $status,
                 'juz' => str_pad($juz, 2, '0', STR_PAD_LEFT),
-                'path' => str_replace(__DIR__ . '/../ai-files/', '', $fullPath)
+                'path' => str_replace(__DIR__ . '/../webp/', '', $fullPath)
             ];
         }
     }

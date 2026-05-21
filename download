@@ -19,7 +19,7 @@ RewriteRule ^(.*)$ public/$1 [L]
 
 # Protect sensitive directories
 <IfModule mod_rewrite.c>
-    RewriteRule ^(mushaftasks|ai-files|cache|users|data|vendor)/ - [F,L]
+    RewriteRule ^(mushaftasks|webp|cache|users|data|vendor)/ - [F,L]
 </IfModule>
 
 # PHP settings
