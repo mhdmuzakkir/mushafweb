@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$riwayah = isset($_GET['riwayah']) ? preg_replace('/[^a-zA-Z0-9\s_-]/', '', $_GET['riwayah']) : '';
+$riwayah = isset($_GET['riwayah']) ? preg_replace('/[^a-zA-Z0-9\s_\-\(\)]/', '', $_GET['riwayah']) : '';
 $page = isset($_GET['page']) ? str_pad(intval($_GET['page']), 3, '0', STR_PAD_LEFT) : '';
 
 if (empty($riwayah) || empty($page)) {

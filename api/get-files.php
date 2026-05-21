@@ -2,7 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-$riwayah = preg_replace('/[^a-zA-Z0-9\s_-]/', '', $_GET['riwayah'] ?? '');
+$riwayah = preg_replace('/[^a-zA-Z0-9\s_\-\(\)]/', '', $_GET['riwayah'] ?? '');
 
 if (empty($riwayah)) {
     echo json_encode([]);

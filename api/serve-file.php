@@ -1,7 +1,7 @@
 <?php
 while (ob_get_level()) ob_end_clean();
 
-$riwayah = preg_replace('/[^a-zA-Z0-9\s_-]/', '', $_GET['riwayah'] ?? '');
+$riwayah = preg_replace('/[^a-zA-Z0-9\s_\-\(\)]/', '', $_GET['riwayah'] ?? '');
 $page = intval($_GET['page'] ?? 0);
 $status = preg_replace('/[^a-z]/', '', strtolower($_GET['status'] ?? 'ajza'));
 

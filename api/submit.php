@@ -59,7 +59,7 @@ if ($page < 1 || $page > 604) {
     sendError('Page number must be between 1 and 604');
 }
 
-$riwayah = preg_replace('/[^a-zA-Z0-9\s_-]/', '', $data['riwayah']);
+$riwayah = preg_replace('/[^a-zA-Z0-9\s_\-\(\)]/', '', $data['riwayah']);
 if (empty($riwayah)) {
     sendError('Invalid riwayah name');
 }
