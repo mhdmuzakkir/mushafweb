@@ -1227,6 +1227,9 @@
                 <div class="top-badge tasks-zero" id="taskBadge" onclick="showExistingTasks()" style="display:none;">
                     0 Tasks
                 </div>
+                <button class="top-btn" id="btnDownloadPdf" onclick="downloadPdf()" title="Download PDF" style="display:none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                </button>
             </div>
 
             <div class="hint zoom-hint" id="zoomHint">Pinch to zoom</div>
@@ -1369,6 +1372,7 @@
         let currentFiles = [], filteredFiles = [], currentFileIndex = -1, currentFilter = 'all';
         let currentRiwayah = '', currentPageTasks = [];
         let currentScale = 1, initialDistance = 0, isPinching = false;
+        let panX = 0, panY = 0, isPanning = false, panStartX = 0, panStartY = 0;
         let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
         let pageChangeCount = 0;
         let db, imageBlobCache = {};
@@ -1502,6 +1506,7 @@
         async function loadFiles(riwayah, autoSelect = true) {
             if (!riwayah) return;
             currentRiwayah = riwayah;
+            document.getElementById('btnDownloadPdf').style.display = '';
             try {
                 const res = await fetch(APIBASEURL + 'get-files.php?riwayah=' + encodeURIComponent(riwayah));
                 currentFiles = await res.json();
@@ -1650,9 +1655,30 @@
             });
         }
 
+        function applyTransform() {
+            const wrapper = document.getElementById('imageWrapper');
+            wrapper.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + currentScale + ')';
+        }
+
         function resetZoom() {
             currentScale = 1;
-            document.getElementById('imageWrapper').style.transform = 'scale(1)';
+            panX = 0;
+            panY = 0;
+            applyTransform();
+        }
+
+        function clampPan() {
+            if (currentScale <= 1) {
+                panX = 0;
+                panY = 0;
+                return;
+            }
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const maxPanX = vw * (currentScale - 1) / 2;
+            const maxPanY = vh * (currentScale - 1) / 2;
+            panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+            panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
         }
 
         function setupGestures() {
@@ -1664,20 +1690,20 @@
                 if (e.touches.length === 2) {
                     e.preventDefault();
                     isPinching = true;
+                    isPanning = false;
                     initialDistance = Math.hypot(
                         e.touches[0].pageX - e.touches[1].pageX,
                         e.touches[0].pageY - e.touches[1].pageY
                     );
-                    const rect = wrapper.getBoundingClientRect();
-                    const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-                    const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                    wrapper.style.transformOrigin = (((mx - rect.left) / rect.width) * 100) + '% ' + (((my - rect.top) / rect.height) * 100) + '%';
                     document.getElementById('zoomHint').classList.add('show');
                 } else if (e.touches.length === 1) {
                     touchStartX = e.touches[0].clientX;
                     touchStartY = e.touches[0].clientY;
+                    panStartX = panX;
+                    panStartY = panY;
                     touchStartTime = Date.now();
                     isPinching = false;
+                    isPanning = false;
                 }
             }, { passive: false });
             overlay.addEventListener('touchmove', e => {
@@ -1690,15 +1716,31 @@
                     const change = dist / initialDistance;
                     let ns = currentScale * change;
                     ns = Math.max(0.5, Math.min(ns, 4.0));
-                    wrapper.style.transform = 'scale(' + ns + ')';
-                    if (Math.abs(change - 1) > 0.05) { initialDistance = dist; currentScale = ns; }
+                    currentScale = ns;
+                    applyTransform();
+                    if (Math.abs(change - 1) > 0.05) { initialDistance = dist; }
+                } else if (e.touches.length === 1 && currentScale > 1.1) {
+                    // Pan when zoomed in
+                    e.preventDefault();
+                    isPanning = true;
+                    const dx = e.touches[0].clientX - touchStartX;
+                    const dy = e.touches[0].clientY - touchStartY;
+                    panX = panStartX + dx;
+                    panY = panStartY + dy;
+                    applyTransform();
                 }
             }, { passive: false });
             overlay.addEventListener('touchend', e => {
                 if (isPinching && e.touches.length < 2) {
                     isPinching = false;
                     document.getElementById('zoomHint').classList.remove('show');
+                    clampPan();
+                    applyTransform();
                     if (currentScale < 0.8) resetZoom();
+                } else if (isPanning) {
+                    isPanning = false;
+                    clampPan();
+                    applyTransform();
                 } else if (!isPinching && e.changedTouches.length === 1) {
                     handleSwipe(e.changedTouches[0]);
                 }
@@ -1707,7 +1749,7 @@
                 const now = Date.now();
                 if (now - lastTap < 300) {
                     if (currentScale > 1.2) resetZoom();
-                    else { currentScale = 2.5; wrapper.style.transform = 'scale(2.5)'; }
+                    else { currentScale = 2.5; panX = 0; panY = 0; applyTransform(); }
                 }
                 lastTap = now;
             });
@@ -2106,6 +2148,15 @@
         function closeAyahPopup() {
             document.getElementById('ayahSheet').classList.remove('open');
             document.getElementById('sheetOverlay').classList.remove('active');
+        }
+
+        function downloadPdf() {
+            if (!currentRiwayah) {
+                alert('Please select a riwayah first');
+                return;
+            }
+            const url = APIBASEURL + 'generate-pdf.php?riwayah=' + encodeURIComponent(currentRiwayah);
+            window.open(url, '_blank');
         }
 
         function openRiwayahPopup() {
