@@ -1,11 +1,11 @@
 <?php
 /**
  * Mushaf Review Form - Get Available Riwayahs
- * New Structure: mushaftasks/riwayah-tasks/{riwayah}/
+ * Scans webp/ folder for riwayah subdirectories
  */
 
 $config = [
-    'tasksBasePath' => __DIR__ . '/../mushaftasks/riwayah-tasks/',
+    'webpBasePath' => __DIR__ . '/../webp/',
     'enableCors' => true
 ];
 
@@ -23,13 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $riwayahs = [];
 
-if (file_exists($config['tasksBasePath']) && is_dir($config['tasksBasePath'])) {
-    $items = scandir($config['tasksBasePath']);
+if (file_exists($config['webpBasePath']) && is_dir($config['webpBasePath'])) {
+    $items = scandir($config['webpBasePath']);
 
     foreach ($items as $item) {
         if ($item[0] === '.') continue;
 
-        $fullPath = $config['tasksBasePath'] . DIRECTORY_SEPARATOR . $item;
+        $fullPath = $config['webpBasePath'] . DIRECTORY_SEPARATOR . $item;
 
         // Only include directories (riwayah folders)
         if (is_dir($fullPath)) {
