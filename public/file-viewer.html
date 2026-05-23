@@ -1232,7 +1232,6 @@
                 </button>
             </div>
 
-            <div class="hint zoom-hint" id="zoomHint">Pinch to zoom</div>
 
             <div id="imageWrapper">
                 <div class="placeholder" id="placeholder">
@@ -1695,7 +1694,6 @@
                         e.touches[0].pageX - e.touches[1].pageX,
                         e.touches[0].pageY - e.touches[1].pageY
                     );
-                    document.getElementById('zoomHint').classList.add('show');
                 } else if (e.touches.length === 1) {
                     touchStartX = e.touches[0].clientX;
                     touchStartY = e.touches[0].clientY;
@@ -1733,7 +1731,6 @@
             overlay.addEventListener('touchend', e => {
                 if (isPinching && e.touches.length < 2) {
                     isPinching = false;
-                    document.getElementById('zoomHint').classList.remove('show');
                     clampPan();
                     applyTransform();
                     if (currentScale < 0.8) resetZoom();

@@ -4,7 +4,7 @@ $config = [
     'rclone' => '/home/bin/rclone',
     'local_base' => '/home/www/mushaf.linuxproguru.com/mushaftasks/',
     'ftp_remote' => 'myftp:/mushaftasks/',
-    'drive_remote' => 'gdrive:/mushaftasks/',
+    'drive_remote' => 'gdrive:/mushafproject/mushaftasks/',
     'log_file' => '/home/www/mushaf.linuxproguru.com/logs/sync.log'
 ];
 
