@@ -13,7 +13,8 @@ if (empty($riwayah) || $page < 1) {
 $folderMap = [
     'ajza' => 'Ajza',
     'completed' => 'Completed',
-    'review' => 'Review Task'
+    'review' => 'Review Task',
+    'recheck' => 'Recheck'
 ];
 
 $folderName = $folderMap[$status] ?? 'Ajza';
@@ -40,7 +41,7 @@ if ($status === 'ajza') {
             break;
         }
     }
-} elseif ($status === 'completed') {
+} elseif ($status === 'completed' || $status === 'recheck') {
     $juz = getJuzFromPage($page);
     $juzFolderWithSub = $baseFolder . '/Ajza/' . str_pad($juz, 2, '0', STR_PAD_LEFT);
     $juzFolderDirect = $baseFolder . '/' . str_pad($juz, 2, '0', STR_PAD_LEFT);

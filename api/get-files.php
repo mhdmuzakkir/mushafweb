@@ -34,6 +34,15 @@ if (file_exists($baseFolder . '/Completed')) {
     }
 }
 
+// 4. Scan Recheck (structure: Recheck/Ajza/01/)
+if (file_exists($baseFolder . '/Recheck')) {
+    if (file_exists($baseFolder . '/Recheck/Ajza')) {
+        scanJuzFolders($baseFolder . '/Recheck/Ajza', 'recheck', $riwayah, $files);
+    } else {
+        scanJuzFolders($baseFolder . '/Recheck', 'recheck', $riwayah, $files);
+    }
+}
+
 // Sort by page number
 usort($files, function($a, $b) {
     return intval($a['page']) - intval($b['page']);

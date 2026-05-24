@@ -76,6 +76,11 @@ if (file_exists($baseFolder . '/Completed/Ajza')) {
 } else {
     scanJuzFolders($baseFolder . '/Completed', 'completed', $riwayah, $files);
 }
+if (file_exists($baseFolder . '/Recheck/Ajza')) {
+    scanJuzFolders($baseFolder . '/Recheck/Ajza', 'recheck', $riwayah, $files);
+} else {
+    scanJuzFolders($baseFolder . '/Recheck', 'recheck', $riwayah, $files);
+}
 
 // Sort by page number
 usort($files, function($a, $b) {
