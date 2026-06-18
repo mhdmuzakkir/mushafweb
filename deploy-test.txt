@@ -1,3 +1,0 @@
-Deploy webhook test file.
-Updated: 2026-06-18 14:08:12 UTC
-If the webhook is working, this updated timestamp should appear on the server after the next push.
