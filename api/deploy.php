@@ -13,7 +13,7 @@
 // --- Configuration ---------------------------------------------------------
 
 // Change this to a strong random secret. Keep it private.
-$DEPLOY_SECRET = 'change-this-to-a-random-secret';
+$DEPLOY_SECRET = 'webupload1312';
 
 // Absolute path to the Git repository on the server.
 // Adjust if your project is checked out somewhere else.
