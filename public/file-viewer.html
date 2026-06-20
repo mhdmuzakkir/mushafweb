@@ -611,6 +611,23 @@
             font-size: 0.95rem;
             font-weight: 700;
         }
+        .surah-goto-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 5px;
+            transition: all var(--transition-fast);
+        }
+        .surah-goto-btn img { width: 100%; height: 100%; object-fit: contain; }
+        .surah-goto-btn:hover { background: var(--accent-muted); border-color: var(--accent); }
+        .surah-goto-btn:active { transform: scale(0.92); }
 
         .overlay {
             position: fixed;
@@ -1033,6 +1050,39 @@
         /* fab-goto removed — replaced by surah trigger in bottom nav */
         .fab-tasks { right: 16px; }
 
+        .zoom-controls {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 80;
+        }
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            font-size: 1.3rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-fast);
+        }
+        .zoom-btn:hover { background: var(--accent-hover); }
+        .zoom-btn:active { transform: scale(0.92); }
+
+        @media (min-width: 1024px) {
+            .zoom-controls { display: flex; }
+        }
+
         .dual-input {
             display: flex;
             gap: 8px;
@@ -1247,6 +1297,13 @@
                 <div class="gesture-overlay" id="gestureOverlay"></div>
             </div>
 
+            <div class="zoom-controls" id="zoomControls">
+                <button class="zoom-btn" onclick="zoomIn()" title="Zoom in"><span>+</span></button>
+                <button class="zoom-btn" onclick="zoomOut()" title="Zoom out"><span>−</span></button>
+                <button class="zoom-btn" onclick="panUp()" title="Move up"><span>↑</span></button>
+                <button class="zoom-btn" onclick="panDown()" title="Move down"><span>↓</span></button>
+                <button class="zoom-btn" onclick="resetZoom()" title="Reset zoom"><span>⌂</span></button>
+            </div>
 
             <button class="fab fab-tasks" id="taskFab" onclick="toggleTaskSheet()" title="Add Tasks"><img src="icons/pencil.svg" style="width:24px;height:24px;filter:invert(1);" alt="Tasks"></button>
             <div class="bottom-nav" id="bottomNav">
@@ -1682,6 +1739,33 @@
             panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
         }
 
+        function zoomIn() {
+            currentScale = Math.min(4.0, currentScale * 1.2);
+            clampPan();
+            applyTransform();
+        }
+
+        function zoomOut() {
+            currentScale = Math.max(1.0, currentScale / 1.2);
+            if (currentScale <= 1) { currentScale = 1; panX = 0; panY = 0; }
+            clampPan();
+            applyTransform();
+        }
+
+        function panUp() {
+            if (currentScale <= 1) return;
+            panY -= 60;
+            clampPan();
+            applyTransform();
+        }
+
+        function panDown() {
+            if (currentScale <= 1) return;
+            panY += 60;
+            clampPan();
+            applyTransform();
+        }
+
         function setupGestures() {
             const overlay = document.getElementById('gestureOverlay');
             const wrapper = document.getElementById('imageWrapper');
@@ -1752,6 +1836,43 @@
                 }
                 lastTap = now;
             });
+
+            // Mouse wheel zoom for desktop
+            overlay.addEventListener('wheel', e => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const ns = Math.max(1.0, Math.min(4.0, currentScale * delta));
+                currentScale = ns;
+                if (currentScale <= 1) { panX = 0; panY = 0; }
+                clampPan();
+                applyTransform();
+            }, { passive: false });
+
+            // Mouse drag pan for desktop
+            let isMouseDown = false, mouseStartX = 0, mouseStartY = 0;
+            overlay.addEventListener('mousedown', e => {
+                if (e.button !== 0) return;
+                isMouseDown = true;
+                mouseStartX = e.clientX;
+                mouseStartY = e.clientY;
+                panStartX = panX;
+                panStartY = panY;
+            });
+            window.addEventListener('mousemove', e => {
+                if (!isMouseDown) return;
+                const dx = e.clientX - mouseStartX;
+                const dy = e.clientY - mouseStartY;
+                panX = panStartX + dx;
+                panY = panStartY + dy;
+                applyTransform();
+            });
+            window.addEventListener('mouseup', () => {
+                if (isMouseDown) {
+                    isMouseDown = false;
+                    clampPan();
+                    applyTransform();
+                }
+            });
         }
 
         function handleSwipe(touch) {
@@ -1769,8 +1890,20 @@
 
         function setupUIAutoHide() {
             const viewer = document.getElementById('viewer');
+            let dragStartX = 0, dragStartY = 0, dragged = false;
+            viewer.addEventListener('mousedown', e => {
+                if (e.target.closest('.top-bar') || e.target.closest('.bottom-nav') || e.target.closest('.zoom-controls')) return;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                dragged = false;
+            });
+            viewer.addEventListener('mousemove', e => {
+                if (dragStartX === 0 && dragStartY === 0) return;
+                if (Math.abs(e.clientX - dragStartX) > 5 || Math.abs(e.clientY - dragStartY) > 5) dragged = true;
+            });
             viewer.addEventListener('click', e => {
-                if (e.target.closest('.top-bar') || e.target.closest('.bottom-nav')) return;
+                if (e.target.closest('.top-bar') || e.target.closest('.bottom-nav') || e.target.closest('.zoom-controls')) return;
+                if (dragged) { dragged = false; return; }
                 toggleUI();
             });
         }
@@ -2127,9 +2260,10 @@
                 item.className = 'surah-list-item' + (surah.surah_number === currentSurah ? ' active' : '');
                 item.innerHTML = '<span class="surah-star"><img src="icons/star.svg" alt=""><span class="star-number">' + toArabicNumerals(surah.surah_number) + '</span></span>' +
                     '<span class="surah-name surah-font">surah' + String(surah.surah_number).padStart(3, '0') + '</span>' +
+                    '<button class="surah-goto-btn" onclick="event.stopPropagation(); closeSurahPopup(); openAyahPopup(' + surah.surah_number + ');" title="Go to specific ayah"><img src="icons/go-to.svg" alt="Go to ayah"></button>' +
                     '<span class="surah-ayah-label">الآيات</span>' +
                     '<span class="surah-ayah-count">' + toArabicNumerals(surah.total_ayahs) + '</span>';
-                item.onclick = () => { closeSurahPopup(); openAyahPopup(surah.surah_number); };
+                item.onclick = () => goToSurahFirstPage(surah.surah_number);
                 list.appendChild(item);
             });
             setTimeout(() => {
@@ -2195,6 +2329,24 @@
                 item.onclick = () => goToSurahAyahFromPopup(surahNumber, i);
                 list.appendChild(item);
             }
+        }
+
+        function goToSurahFirstPage(surahNumber) {
+            if (!mushafData || !surahNumber) return;
+            const surah = mushafData.surah_statistics.find(s => s.surah_number === parseInt(surahNumber));
+            if (!surah) return;
+            const targetPage = surah.start_page;
+            if (!targetPage) { alert('Start page not found for this surah'); return; }
+            const file = currentFiles.find(f => parseInt(f.page) === targetPage);
+            if (!file) { alert('Page ' + targetPage + ' not found in current riwayah!'); return; }
+            if (currentFilter !== 'all' && file.status !== currentFilter) {
+                currentFilter = 'all';
+                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                applyFilter();
+            }
+            const idx = filteredFiles.findIndex(f => parseInt(f.page) === targetPage);
+            if (idx !== -1) { selectFile(idx); saveSession(); }
+            closeSurahPopup();
         }
 
         function goToSurahAyahFromPopup(surah, ayah) {
